@@ -50,18 +50,20 @@ nav {
   font-weight: 700;
 }
 .but {
-  position:absolute;
+  position: fixed; /* במקום position: absolute */
   bottom: 2rem;
   right: 2rem;
-background-color: white;
+  background-color: white;
   border: none;
   border-radius: 49%;
   width: 7rem;
   height: 6rem;
   font-size: 2rem;
   box-shadow: 0 2rem 6rem rgba(0,0,0,0.2);
-  cursor:pointer;
-       }
+  cursor: pointer;
+  z-index: 1000; /* להבטיח שהכפתור יהיה מעל תוכן אחר */
+}
+
        .but:hover {
   box-shadow: 0 3rem 6rem rgba(21,128,61,0.15);
   transform: scale(1.08);
