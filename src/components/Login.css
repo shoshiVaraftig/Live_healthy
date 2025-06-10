@@ -1,0 +1,251 @@
+/* src/components/Login.css */
+
+/* ייבוא גופנים (לדוגמה, Heebo מ-Google Fonts) */
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap'); /* הוספתי מונסראט לכותרות */
+
+
+/* הגדרות משתנים כלליים (עודכנו לצבעי ירוק) */
+:root {
+    /* צבעים ירוקים חדשים התואמים לעיצוב הכללי של האתר */
+    --primary-green-main: #15803d; /* ירוק ראשי, כמו ה-Navbar והכותרות */
+    --secondary-green-accent: #81c784; /* ירוק בהיר יותר, כמו הדגשים */
+    --light-green-bg-faded: #f6fff7; /* רקע ירוק בהיר מאוד, כמו כרטיסים */
+
+    /* צבעים כלליים */
+    --text-dark: #1e293b;
+    --text-medium: #475569;
+    --text-light: #64748b;
+    --background-color: #f8fafc;
+    --border-color: #e2e8f0;
+
+    /* צבעי שגיאה */
+    --error-bg: #fef2f2;
+    --error-border: #fca5a5;
+    --error-text: #b91c1c;
+
+    /* צלליות ורדיוסים */
+    --shadow-light: rgba(0, 0, 0, 0.05);
+    --shadow-medium: rgba(0, 0, 0, 0.1);
+    --border-radius-sm: 0.3rem;
+    --border-radius-md: 0.6rem;
+    --border-radius-lg: 0.8rem;
+    --border-radius-full: 9999px; /* הוספתי את המשתנה הזה לקו התחתון בכותרת */
+}
+
+/* הגדרת גופן בסיסית לעמוד ההתחברות */
+.login-page-wrapper {
+    font-family: 'Heebo', sans-serif;
+    direction: rtl;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--background-color);
+    padding: 2rem 1rem;
+    box-sizing: border-box;
+
+    @media (max-width: 640px) {
+        padding: 1.5rem 0.8rem;
+    }
+}
+
+.login-container {
+    max-width: 448px;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 4px 6px -1px var(--shadow-medium), 0 2px 4px -2px var(--shadow-medium);
+    width: 100%;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-title {
+    font-family: 'Montserrat', 'Heebo', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--primary-green-main); /* צבע הכותרת - ירוק ראשי */
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.login-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4rem;
+    height: 0.25rem;
+    background-color: var(--secondary-green-accent);
+    border-radius: var(--border-radius-full);
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.form-group {
+    margin-bottom: 0;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin-bottom: 0.4rem;
+}
+
+.form-input {
+    appearance: none;
+    display: block;
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    color: var(--text-dark);
+    transition: all 0.2s ease-in-out;
+}
+
+.form-input::placeholder {
+    color: var(--text-medium);
+}
+
+.form-input:focus {
+    outline: none;
+    /* וודא שהצבעים כאן מתייחסים למשתנים הירוקים החדשים */
+    border-color: var(--primary-green-main); /* שינוי מצבע כחול לירוק */
+    box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.25); /* שינוי מצבע כחול לירוק (rgb של #15803d) */
+    z-index: 10;
+}
+
+.password-input-wrapper {
+    position: relative;
+}
+
+.toggle-password-button {
+    position: absolute;
+    inset-y: 0;
+    left: 0;
+    padding-left: 0.75rem;
+    display: flex;
+    align-items: center;
+    color: var(--text-medium);
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+.toggle-password-button svg {
+    height: 1.25rem;
+    width: 1.25rem;
+}
+
+.error-message {
+    background-color: var(--error-bg);
+    border: 1px solid var(--error-border);
+    color: var(--error-text);
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius-md);
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    position: relative;
+}
+
+.submit-button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border: 1px solid transparent;
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 1px 2px 0 var(--shadow-light);
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    /* וודא שהצבעים כאן מתייחסים למשתנים הירוקים החדשים */
+    background-color: var(--primary-green-main); /* שינוי מצבע כחול לירוק */
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.submit-button:hover {
+    background-color: #0d6e30; /* ירוק כהה יותר בריחוף (כהה יותר מ-primary-green-main) */
+    box-shadow: 0 4px 6px -1px var(--shadow-medium), 0 2px 4px -2px var(--shadow-medium);
+}
+
+.submit-button:focus {
+    outline: none;
+    /* וודא שהצבעים כאן מתייחסים למשתנים הירוקים החדשים */
+    box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.5); /* שינוי מצבע כחול לירוק (rgb של #15803d) */
+}
+
+.submit-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.loading-spinner {
+    animation: spin 1s linear infinite;
+    margin-left: 0.75rem;
+    margin-right: -0.25rem;
+    height: 1.25rem;
+    width: 1.25rem;
+    color: #ffffff;
+}
+
+/* אנימציית ספינר */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.register-link-container {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.register-link-text {
+    font-size: 0.9rem;
+    color: var(--text-medium);
+}
+
+.register-link {
+    font-weight: 600;
+    /* וודא שהצבע כאן מתייחס למשתנה הירוק החדש */
+    color: var(--primary-green-main); /* שינוי מצבע כחול לירוק */
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+.register-link:hover {
+    color: #0d6e30; /* ירוק כהה יותר בריחוף */
+    text-decoration: underline;
+}
+
+/* מדיה קווריות עבור סמארטפונים קטנים */
+@media (max-width: 400px) {
+    .login-container {
+        padding: 1.5rem 1rem;
+    }
+    .login-title {
+        font-size: 1.75rem;
+    }
+    .form-input, .submit-button {
+        padding: 0.6rem 0.75rem;
+        font-size: 0.9rem;
+    }
+    .form-label, .error-message, .register-link-text {
+        font-size: 0.85rem;
+    }
+}

@@ -1,188 +1,290 @@
+// src/components/Register.tsx
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { authService } from "../services/authService"; // ייבוא שירות האימות שלנו
+import type { PersonalArea } from "../types/personal"; // ייבוא PersonalArea
+
+// ייבוא קובץ ה-CSS החדש
+import './Register.css';
 
 const Register: React.FC = () => {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate();
+    
+    const [formData, setFormData] = useState<PersonalArea & { confirmPassword?: string }>({
+        id: 0, // בדרך כלל ה-ID נוצר בשרת, שלח 0 כברירת מחדל
+        username: "",
+        password: "",
+        email: "",
+        phone: "",
+        gender: 0,
+        birthDate: "2000-01-01T00:00:00.000Z",
+        programLevel: 0,
+        startWeight: 0,
+        goalWeight: 0,
+        goalDate: "2025-12-31T00:00:00.000Z",
+        startDate: new Date().toISOString(),
+        weightTracing: {
+            id: 0,
+            userId: 0,
+            weight: 0,
+            date: new Date().toISOString()
+        },
+        dietaryPreference: {
+            id: 0,
+            userId: 0,
+            foodName: "",
+            like: 0
+        },
+        chatPersonality: "",
+        confirmPassword: "", // שדה עזר לוולידציה בצד הלקוח בלבד
+    });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value, type } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            // המרה ל-number עבור שדות מספריים, אם יש לך כאלה בטופס
+            [name]: type === 'number' ? Number(value) : value,
+        }));
+    };
 
-    try {
-      // Validation
-      if (!formData.username || !formData.email || !formData.password) {
-        throw new Error("יש למלא את כל השדות");
-      }
+    // פונקציית handleChange נוספת לשדות תאריך אם תרצה להוסיף אותם לטופס
+    // הערה: יש לוודא שה-type UserRegistrationData נגיש או לשנות ל-PersonalArea
+    const handleDateChange = (name: keyof PersonalArea, date: string) => {
+        setFormData((prev) => ({
+            ...prev,
+            [name]: date,
+        }));
+    };
 
-      if (formData.password !== formData.confirmPassword) {
-        throw new Error("הסיסמאות אינן תואמות");
-      }
+    // פונקציית handleChange עבור אובייקטים מקוננים (כמו weightTracing, dietaryPreference)
+    const handleNestedChange = (
+        parentName: keyof PersonalArea,
+        childName: string,
+        value: string | number
+    ) => {
+        setFormData((prev) => ({
+            ...prev,
+            [parentName]: {
+                ...(prev[parentName] as object), // העתק את האובייקט הקיים
+                [childName]: value,
+            },
+        }));
+    };
 
-      // Here you would make an API call to your server for registration
-      // For example: await registerUser(formData);
-      
-      // Simulate successful registration
-      setTimeout(() => {
-        navigate("/login");
-      }, 1000);
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("אירעה שגיאה בתהליך ההרשמה");
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError(null);
+        setLoading(true);
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+        try {
+            // Validation
+            if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
+                throw new Error("יש למלא את כל השדות הבסיסיים.");
+            }
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f8fafc] py-12 px-4" dir="rtl">
-      <div className="max-w-md bg-[#ffffff] p-8 rounded-xl shadow-md">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-[#1e293b] mb-2">הרשמה לProDiet</h2>
-          <p className="text-[#64748b] mb-6">צור חשבון חדש והתחל את המסע שלך</p>
-        </div>
-        
-        <form className="space-y-5" onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="username" className="block text-sm font-medium text-[#334155] mb-1">
-              שם משתמש
-            </label>
-            <input
-              id="username"
-              name="username"
-              type="text"
-              required
-              value={formData.username}
-              onChange={handleChange}
-              className="appearance-none block w-full px-4 py-3 border border-[#e2e8f0] rounded-lg text-[#1e293b] focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] transition duration-150"
-              placeholder="הכנס שם משתמש"
-            />
-          </div>
-          
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-[#334155] mb-1">
-              כתובת אימייל
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-              className="appearance-none block w-full px-4 py-3 border border-[#e2e8f0] rounded-lg text-[#1e293b] focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] transition duration-150"
-              placeholder="your@email.com"
-            />
-          </div>
-          
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-[#334155] mb-1">
-              סיסמה
-            </label>
-            <div className="relative">
-              <input
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                required
-                value={formData.password}
-                onChange={handleChange}
-                className="appearance-none block w-full px-4 py-3 border border-[#e2e8f0] rounded-lg text-[#1e293b] focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] transition duration-150"
-                placeholder="הכנס סיסמה"
-              />
-              <button
-                type="button"
-                onClick={togglePasswordVisibility}
-                className="absolute inset-y-0 left-0 pl-3 flex items-center text-[#64748b] cursor-pointer"
-              >
-                {showPassword ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" clipRule="evenodd" />
-                    <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
-                  </svg>
-                ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                    <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-                  </svg>
-                )}
-              </button>
+            if (formData.password !== formData.confirmPassword) {
+                throw new Error("הסיסמאות אינן תואמות.");
+            }
+
+            // יצירת אובייקט הנתונים המלא לשליחה ל-API
+            const dataToSend: PersonalArea = {
+                id: formData.id,
+                username: formData.username,
+                password: formData.password,
+                email: formData.email,
+                phone: formData.phone,
+                gender: formData.gender,
+                birthDate: formData.birthDate,
+                programLevel: formData.programLevel,
+                startWeight: formData.startWeight,
+                goalWeight: formData.goalWeight,
+                goalDate: formData.goalDate,
+                startDate: formData.startDate,
+                weightTracing: formData.weightTracing,
+                dietaryPreference: formData.dietaryPreference,
+                chatPersonality: formData.chatPersonality,
+            };
+            
+            console.log("dataToSend object:", dataToSend);
+            console.log("Email value in dataToSend:", dataToSend.email);
+            
+            // קריאה לפונקציית הרישום בשירות האימות
+            await authService.register(dataToSend);
+
+            // הרשמה והתחברות מוצלחות - נווט לאזור האישי
+            alert('הרשמה והתחברות מוצלחות!');
+            navigate("/personal-area");
+
+        } catch (err: any) {
+            console.error("Registration error:", err);
+            if (err.message.includes("409")) {
+                setError("שם המשתמש או האימייל כבר קיימים.");
+            } else if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("אירעה שגיאה בתהליך ההרשמה.");
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+
+    return (
+        <div className="register-page-wrapper">
+            <div className="register-container">
+                <div className="register-header">
+                    <h2 className="register-title">הרשמה לProDiet</h2>
+                    <p className="register-subtitle">צור חשבון חדש והתחל את המסע שלך</p>
+                </div>
+
+                <form className="register-form" onSubmit={handleSubmit}>
+                    {/* שדות קיימים */}
+                    <div className="form-group">
+                        <label htmlFor="username" className="form-label">
+                            שם משתמש
+                        </label>
+                        <input
+                            id="username"
+                            name="username"
+                            type="text"
+                            required
+                            value={formData.username}
+                            onChange={handleChange}
+                            className="form-input"
+                            placeholder="הכנס שם משתמש"
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="email" className="form-label">
+                            כתובת אימייל
+                        </label>
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            required
+                            value={formData.email}
+                            onChange={handleChange}
+                            className="form-input"
+                            placeholder="your@email.com"
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="password" className="form-label">
+                            סיסמה
+                        </label>
+                        <div className="password-input-wrapper">
+                            <input
+                                id="password"
+                                name="password"
+                                type={showPassword ? "text" : "password"}
+                                required
+                                value={formData.password}
+                                onChange={handleChange}
+                                className="form-input"
+                                placeholder="הכנס סיסמה"
+                            />
+                            <button
+                                type="button"
+                                onClick={togglePasswordVisibility}
+                                className="toggle-password-button"
+                            >
+                                {showPassword ? (
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" clipRule="evenodd" />
+                                        <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
+                                    </svg>
+                                ) : (
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                        <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                                    </svg>
+                                )}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="confirmPassword" className="form-label">
+                            אימות סיסמה
+                        </label>
+                        <input
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            type={showPassword ? "text" : "password"}
+                            required
+                            value={formData.confirmPassword}
+                            onChange={handleChange}
+                            className="form-input"
+                            placeholder="הכנס סיסמה שוב"
+                        />
+                    </div>
+                    {/* --- סוף שדות קיימים --- */}
+
+                    {/* --- שדות חדשים שנוספו מה-interface: כרגע מוגדרים עם ערכי ברירת מחדל ב-useState ולא מופיעים בטופס ה-HTML --- */}
+                    {/* אם תרצה לאפשר למשתמש להזין את השדות הללו, תוכל להוסיף אותם כאן בדומה לשדות הקיימים. לדוגמה: */}
+                    {/*
+                    <div className="form-group">
+                        <label htmlFor="phone" className="form-label">
+                            טלפון
+                        </label>
+                        <input
+                            id="phone"
+                            name="phone"
+                            type="text"
+                            value={formData.phone}
+                            onChange={handleChange}
+                            className="form-input"
+                            placeholder="הכנס מספר טלפון"
+                        />
+                    </div>
+                    */}
+                    {/* וכן הלאה עבור gender, birthDate, programLevel, startWeight, goalWeight, goalDate, startDate, chatPersonality */}
+
+                    {error && (
+                        <div className="error-message" role="alert">
+                            <span className="error-message-text">{error}</span>
+                        </div>
+                    )}
+
+                    <div>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="submit-button"
+                        >
+                            {loading ? (
+                                <svg className="loading-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            ) : "הירשם"}
+                        </button>
+                    </div>
+                </form>
+
+                <div className="login-link-container">
+                    <p className="login-link-text">
+                        כבר יש לך חשבון?{" "}
+                        <Link to="/login" className="login-link">
+                            התחבר כאן
+                        </Link>
+                    </p>
+                </div>
             </div>
-          </div>
-          
-          <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-[#334155] mb-1">
-              אימות סיסמה
-            </label>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type={showPassword ? "text" : "password"}
-              required
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className="appearance-none block w-full px-4 py-3 border border-[#e2e8f0] rounded-lg text-[#1e293b] focus:outline-none focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] transition duration-150"
-              placeholder="הכנס סיסמה שוב"
-            />
-          </div>
-
-          {error && (
-            <div className="bg-[#fef2f2] border border-[#fca5a5] text-[#b91c1c] px-4 py-3 rounded-lg" role="alert">
-              <span className="block sm:inline">{error}</span>
-            </div>
-          )}
-
-          <div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-[#ffffff] bg-[#3b82f6] hover:bg-[#2563eb] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#3b82f6] transition duration-150"
-            >
-              {loading ? (
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-              ) : "הירשם"}
-            </button>
-          </div>
-        </form>
-        
-        <div className="text-center mt-6">
-          <p className="text-sm text-[#64748b]">
-            כבר יש לך חשבון?{" "}
-            <Link to="/login" className="font-medium text-[#3b82f6] hover:text-[#2563eb]">
-              התחבר כאן
-            </Link>
-          </p>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Register;

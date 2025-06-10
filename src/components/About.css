@@ -1,0 +1,338 @@
+/* src/components/About.css */
+
+/* ייבוא גופנים (לדוגמה, Montserrat, Assistant, Roboto, Open Sans מ-Google Fonts) */
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&family=Montserrat:wght@700;800&family=Open+Sans:wght@400&family=Roboto:wght@400&display=swap');
+
+/* הגדרות משתנים כלליים (ניתן לחזור על אלה שהוגדרו בקבצים אחרים או לייבא קובץ משותף) */
+:root {
+    --primary-green: #15803d;
+    --secondary-green-light: #81c784; /* צבע ירוק בהיר יותר לכותרות וקישורים */
+    --light-green-bg-faded: #f6fff7; /* רקע בהיר לסקשנים */
+    --text-gray-dark: #4a5568; /* דומה ל-gray-700 */
+    --text-gray-medium: #718096; /* דומה ל-gray-600 */
+    --card-background: #ffffff;
+    --border-radius-lg: 0.8rem;
+    --border-radius-full: 9999px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --transition-duration: 300ms;
+}
+
+/* סגנונות גלובליים לגוף העמוד והניווט */
+body {
+    font-family: 'Assistant', Arial, sans-serif; /* גופן כללי, ניתן להתאים */
+    direction: rtl; /* לוודא כיווניות מימין לשמאל */
+    color: var(--text-gray-dark); /* צבע טקסט כללי */
+    /* חשוב: הוסף padding-top ל-body בגובה ה-Navbar אם הוא fixed */
+    padding-top: 80px; /* החלף 80px בגובה האמיתי של סרגל הניווט שלך */
+    margin: 0; /* וודא שאין מרווחים חיצוניים כברירת מחדל */
+}
+
+/* סגנונות עבור סרגל הניווט (אם הוא חלק מהקומפוננטה Home או קומפוננטה נפרדת) */
+/* יש לוודא שהקלאס הזה מיושם על האלמנט העוטף את סרגל הניווט */
+.navbar-container { 
+    position: fixed; /* מצמיד את האלמנט למיקום יחסי ל-viewport */
+    top: 0; /* מצמיד אותו לחלק העליון של המסך */
+    width: 100%; /* מוודא שהוא תופס את כל רוחב המסך */
+    z-index: 1000; /* חשוב: מוודא שה-Navbar יהיה מעל תוכן אחר */
+    background-color: #ffffff; /* רקע לסרגל הניווט */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* צל עדין */
+    /* הוסף כאן ריפוד, גובה ועיצובים נוספים ספציפיים ל-Navbar שלך */
+    height: 80px; /* לדוגמה, קבע גובה קבוע ל-Navbar */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+}
+
+
+/* סגנונות עבור עמוד האודות עצמו */
+.about-container {
+    max-width: 1280px; /* max-w-7xl */
+    margin: 0 auto;
+    padding: 3rem 1rem; /* py-12, px-4 sm:px-6 lg:px-8 */
+    /* אם ה-contact-section נדבק בתחתית, ייתכן שיהיה צורך ב-padding-bottom */
+    /* padding-bottom: 120px; */ /* לדוגמה, גובה ה-contact-section + מרווח כלשהו */
+}
+
+.about-header {
+    text-align: center;
+    margin-bottom: 3rem; /* mb-12 */
+}
+
+.about-title {
+    font-family: 'Montserrat', 'Assistant', Arial, sans-serif;
+    font-size: 2.5rem; /* text-4xl */
+    font-weight: 800; /* font-bold */
+    color: var(--primary-green);
+    letter-spacing: 0.025em; /* tracking-wide */
+}
+
+.about-title span {
+    color: var(--secondary-green-light);
+}
+
+.about-intro-text {
+    text-align: center;
+    max-width: 48rem; /* max-w-3xl */
+    margin: 0 auto 4rem; /* mb-16 */
+    font-size: 1.125rem; /* text-lg */
+    line-height: 1.625; /* leading-relaxed */
+    font-family: 'Roboto', 'Open Sans', Arial, sans-serif;
+    color: var(--text-gray-dark);
+}
+
+/* Section Titles */
+.section-title {
+    text-align: center;
+    font-size: 2rem; /* text-3xl */
+    font-weight: 700; /* font-bold */
+    color: var(--primary-green);
+    margin-bottom: 2rem; /* mb-8 */
+    position: relative;
+    padding-bottom: 1rem; /* pb-4 */
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4rem; /* w-16 */
+    height: 0.25rem; /* h-1 */
+    background-color: var(--secondary-green-light);
+    border-radius: var(--border-radius-full);
+}
+
+/* Mission Section */
+.mission-section {
+    margin-bottom: 4rem; /* mb-16 */
+}
+
+.mission-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--light-green-bg-faded); /* bg-[#f6fff7] */
+    padding: 2rem; /* p-8 */
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.mission-icon {
+    flex-shrink: 0;
+    margin-bottom: 1.5rem; /* mb-6 */
+    color: var(--primary-green);
+    font-size: 3.75rem; /* size={60} */
+}
+
+.mission-text {
+    font-size: 1.125rem; /* text-lg */
+    line-height: 1.625; /* leading-relaxed */
+    color: var(--text-gray-dark);
+}
+
+/* Values Section */
+.values-section {
+    margin-bottom: 4rem; /* mb-16 */
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 */
+    gap: 2rem; /* gap-8 */
+}
+
+.value-card {
+    background-color: var(--card-background);
+    padding: 2rem; /* p-8 */
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+    transition: all var(--transition-duration) ease-in-out;
+    border: 1px solid rgba(21, 128, 61, 0.05); /* גבול עדין */
+}
+
+.value-card:hover {
+    transform: translateY(-0.5rem); /* hover:-translate-y-2 */
+    box-shadow: var(--shadow-md);
+}
+
+.value-icon {
+    color: var(--primary-green);
+    margin: 0 auto 1rem; /* mx-auto mb-4 */
+    font-size: 2.5rem; /* size={40} */
+}
+
+.value-title {
+    font-size: 1.25rem; /* text-xl */
+    font-weight: 600; /* font-semibold */
+    color: var(--primary-green);
+    margin-bottom: 0.75rem; /* mb-3 */
+}
+
+.value-description {
+    color: var(--text-gray-medium);
+}
+
+/* Team Section */
+.team-section {
+    margin-bottom: 4rem; /* mb-16 */
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 */
+    gap: 2rem; /* gap-8 */
+}
+
+.team-member-card {
+    background-color: var(--card-background);
+    padding: 2rem; /* p-8 */
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+    border: 1px solid rgba(21, 128, 61, 0.05); /* גבול עדין */
+}
+
+.team-member-avatar {
+    width: 8rem; /* w-32 */
+    height: 8rem; /* h-32 */
+    background-color: var(--light-green-bg-faded); /* bg-[#f6fff7] */
+    border-radius: var(--border-radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem; /* text-xl */
+    font-weight: 700; /* font-bold */
+    color: var(--primary-green);
+    margin: 0 auto 1.5rem; /* mx-auto mb-6 */
+}
+
+.team-member-name {
+    font-size: 1.25rem; /* text-xl */
+    font-weight: 600; /* font-semibold */
+    color: var(--primary-green);
+    margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.team-member-role {
+    color: var(--secondary-green-light);
+    font-weight: 500; /* font-medium */
+    margin-bottom: 1rem; /* mb-4 */
+}
+
+.team-member-description {
+    color: var(--text-gray-medium);
+}
+
+/* Contact Section - Sticky */
+.contact-section {
+    position: -webkit-sticky; /* תמיכה בדפדפני WebKit ישנים */
+    position: sticky;
+    top: 100px; /* מרחק מהחלק העליון של ה-viewport כאשר הוא נדבק.
+                   התאם את הערך הזה כך שלא יסתיר את ה-Navbar.
+                   לדוגמה, אם ה-Navbar בגובה 80px, 100px ייתן רווח של 20px מתחת ל-Navbar. */
+    z-index: 900; /* וודא שהוא מתחת ל-Navbar (z-index: 1000) אבל מעל תוכן רגיל */
+
+    /* שאר הסגנונות המקוריים של המלבן */
+    background-color: var(--light-green-bg-faded); /* bg-[#f6fff7] */
+    padding: 2rem; /* p-8 */
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+    margin-top: 4rem; /* מרווח מהסקשן הקודם */
+    margin-bottom: 2rem; /* מרווח לפני תחתית העמוד / footer אם יש */
+}
+
+.contact-title {
+    font-size: 2rem; /* text-3xl */
+    font-weight: 700; /* font-bold */
+    color: var(--primary-green);
+    margin-bottom: 1.5rem; /* mb-6 */
+}
+
+.contact-text {
+    font-size: 1.125rem; /* text-lg */
+    line-height: 1.625; /* leading-relaxed */
+    color: var(--text-gray-dark);
+}
+
+.contact-text a {
+    color: var(--primary-green);
+    font-weight: 500; /* font-medium */
+    transition: color var(--transition-duration) ease-in-out;
+    text-decoration: none; /* הסר קו תחתון כברירת מחדל */
+}
+
+.contact-text a:hover {
+    color: var(--secondary-green-light);
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) { /* md breakpoint */
+    .mission-content {
+        flex-direction: row;
+    }
+    .mission-icon {
+        margin-bottom: 0;
+        margin-right: 2rem; /* md:ml-8 */
+    }
+}
+
+@media (max-width: 1024px) { /* lg breakpoint */
+    .values-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) { /* sm breakpoint */
+    .about-title {
+        font-size: 2rem; /* md:text-5xl */
+    }
+    .about-intro-text, .mission-text, .contact-text {
+        font-size: 1rem;
+    }
+    .section-title {
+        font-size: 1.8rem;
+    }
+    .mission-icon {
+        font-size: 3rem;
+    }
+    .values-grid, .team-grid {
+        grid-template-columns: 1fr; /* stack on mobile */
+        gap: 1.5rem;
+    }
+    .value-title, .team-member-name, .contact-title {
+        font-size: 1.1rem;
+    }
+    .about-container {
+        padding: 2rem 0.8rem;
+    }
+    /* התאמות ל-sticky במובייל אם נדרש */
+    .contact-section {
+        top: 80px; /* התאם אם ה-Navbar במובייל שונה בגובהו */
+        padding: 1.5rem; /* אולי ריפוד קטן יותר */
+    }
+}
+
+@media (max-width: 480px) {
+    .about-title {
+        font-size: 1.8rem;
+    }
+    .section-title {
+        font-size: 1.6rem;
+    }
+    .value-card, .team-member-card, .contact-section {
+        padding: 1.5rem;
+    }
+    .team-member-avatar {
+        width: 7rem;
+        height: 7rem;
+    }
+}

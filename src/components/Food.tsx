@@ -1,8 +1,8 @@
-// src/components/FoodSearchComponent.tsx
 import React, { useState, useEffect } from 'react';
 import { useFoodSearchStore } from '../store/foodStore';
+import './FoodSearchComponent.css'; // <--- ייבוא קובץ ה-CSS החדש
 
-const FoodSearchComponent: React.FC = () => {
+const Food: React.FC = () => {
   const [searchText, setSearchText] = useState<string>('');
 
   const {
@@ -18,7 +18,12 @@ const FoodSearchComponent: React.FC = () => {
   useEffect(() => {
     if (lastSearchTerm) {
       setSearchText(lastSearchTerm);
-      checkAndRefetchIfStale();
+      // ייתכן שלא נרצה לרפרש אוטומטית ב-useEffect, אלא רק בטעינה ראשונית של העמוד
+      // או כשיש צורך. checkAndRefetchIfStale פחות רלוונטי כאן אלא אם כן
+      // מדובר בקריאה מחדש של נתונים על בסיס זמן.
+      // אם הכוונה היא לרענן את הנתונים אם המשתמש חזר לעמוד לאחר זמן,
+      // המיקום הזה עשוי להיות בסדר.
+      // checkAndRefetchIfStale();
     }
   }, [lastSearchTerm, checkAndRefetchIfStale]);
 
@@ -37,51 +42,54 @@ const FoodSearchComponent: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Food Calorie Search (with Local Storage)</h1>
-      <form onSubmit={handleSearch}>
-       <input
-  type="text"
-  placeholder="Enter food name (e.g., banana)"
-  value={searchText}
-  onChange={(e) => setSearchText(e.target.value)}
-  disabled={loading}
-  id="food-search-input" // <-- הוסף ID
-  name="foodSearch" // <-- הוסף Name (אופציונלי אם לא שולחים טופס רגיל)
-/>
+    <div className="food-search-container"> {/* <--- קלאס עוטף חדש */}
+      <h1>Food Calorie Search</h1> {/* הוסר "with Local Storage" מהכותרת */}
+      <form onSubmit={handleSearch} className="food-search-form"> {/* <--- קלאס חדש לטופס */}
+        <input
+          type="text"
+          placeholder="חיפוש מזון (לדוגמה: בננה)" 
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          disabled={loading}
+          className="food-search-input" 
+          id="food-search-input"
+          name="foodSearch"
+        />
         <button type="submit" disabled={loading}>
-          {loading ? 'Searching...' : 'Search'}
+          {loading ? 'מחפש...' : 'חיפוש'} 
         </button>
         <button type="button" onClick={handleClear} disabled={loading}>
-          Clear Search
+          נקה חיפוש 
         </button>
       </form>
 
-      {loading && <p>Loading calorie information...</p>}
+      {loading && <p className="loading-message">טוען מידע על קלוריות...</p>} {/* <--- הודעות מצב מעוצבות */}
 
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+      {error && <p className="error-message">שגיאה: {error}</p>}
 
       {searchedFoodResult && !loading && !error && (
-        <div>
-          <h2>Result for: {searchedFoodResult.name}</h2> {/* שימו לב ל-name */}
-          <p>ID: {searchedFoodResult.id}</p>
-          <p>Calories: {searchedFoodResult.calories}</p>
-          <p>Category: {searchedFoodResult.category}</p>
-          {searchedFoodResult.servingSize && ( // מציג רק אם קיים
-            <p>Serving Size: {searchedFoodResult.servingSize}</p>
+        <div className="food-result-card"> {/* <--- כרטיס תוצאה מעוצב */}
+          <h2>תוצאה עבור: {searchedFoodResult.name}</h2>
+          <p><strong>מזהה:</strong> {searchedFoodResult.id}</p>
+          <p><strong>קלוריות:</strong> {searchedFoodResult.calories}</p>
+          <p><strong>קטגוריה:</strong> {searchedFoodResult.category}</p>
+          {searchedFoodResult.servingSize && (
+            <p><strong>גודל מנה:</strong> {searchedFoodResult.servingSize}</p>
           )}
         </div>
       )}
 
       {!searchedFoodResult && !loading && !error && searchText.trim() && (
-        <p>No results found for "{searchText}". Try another food name.</p>
+        <p className="no-results-message">לא נמצאו תוצאות עבור "{searchText}". נסה שם מזון אחר.</p>
       )}
 
-      <button onClick={() => lastSearchTerm && searchFoodItem(lastSearchTerm)} disabled={loading || !lastSearchTerm}>
-        Refetch Current Search
-      </button>
+      <div className="refetch-button-wrapper"> {/* עוטף את כפתור הרענון */}
+        <button onClick={() => lastSearchTerm && searchFoodItem(lastSearchTerm)} disabled={loading || !lastSearchTerm} className="refetch-button">
+          רענן חיפוש נוכחי {/* <--- כפתור רענן בעברית */}
+        </button>
+      </div>
     </div>
   );
 };
 
-export default FoodSearchComponent;
+export default Food;

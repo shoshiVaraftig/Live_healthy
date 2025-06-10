@@ -1,0 +1,389 @@
+/* src/components/Recipes.css */
+
+/* ייבוא גופנים (לדוגמה, Heebo מ-Google Fonts) */
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&display=swap');
+
+/* הגדרות משתנים כלליים (ניתן להעביר לקובץ משותף אם יש כזה) */
+:root {
+    --primary-green: #15803d; /* במקור #15803d */
+    --secondary-green: #166534; /* במקור #166534 */
+    --light-green-bg: #e8f5e9; /* במקור #e8f5e9 */
+    --lightest-green-bg: #f7fee7; /* במקור #f7fee7 */
+    --text-dark-green: #15803d;
+    --text-opacity-80: rgba(21, 128, 61, 0.8); /* 80% אטימות של primary-green */
+    --border-light-green: #e8f5e9;
+    --background-color-light: #f0fdf4; /* צבע רקע כללי בהיר */
+    --card-background: #ffffff;
+    --red-heart: #dc2626; /* במקור #dc2626 */
+    --border-radius-sm: 0.3rem;
+    --border-radius-md: 0.6rem;
+    --border-radius-lg: 0.8rem; /* rounded-xl ב-Tailwind */
+    --border-radius-full: 9999px; /* rounded-full ב-Tailwind */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+/* הגדרת גופן בסיסית לעמוד */
+body {
+    font-family: 'Heebo', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color-light); /* צבע רקע כללי */
+}
+
+.recipes-container {
+    direction: rtl;
+    max-width: 1280px; /* max-w-6xl ב-TailwindCSS (1152px), נגדיר מעט יותר */
+    margin: 0 auto;
+    padding: 2rem 1rem; /* px-4 py-8 */
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem; /* mb-8 */
+}
+
+.page-title {
+    font-size: 2.25rem; /* text-3xl */
+    font-weight: 700; /* font-bold */
+    color: var(--primary-green);
+    margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.page-description {
+    color: var(--text-opacity-80);
+    max-width: 48rem; /* max-w-2xl ב-TailwindCSS (768px) */
+    margin: 0 auto;
+    font-size: 1rem;
+}
+
+/* Search and Filters */
+.search-filter-section {
+    margin-bottom: 2rem; /* mb-8 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.search-input-wrapper {
+    position: relative;
+    margin-bottom: 1.25rem; /* mb-5 */
+    max-width: 448px; /* max-w-md ב-TailwindCSS */
+    width: 100%;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 0.75rem 0.75rem 2.5rem; /* p-3 pr-10 */
+    border: 1px solid var(--primary-green);
+    border-radius: var(--border-radius-full);
+    outline: none;
+    transition: all 0.2s ease-in-out;
+    background-color: var(--card-background);
+    text-align: right; /* יישור לימין בגלל dir="rtl" */
+}
+
+.search-input:focus {
+    box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.2); /* focus:ring-2 focus:ring-[#15803d] */
+}
+
+.search-icon {
+    position: absolute;
+    left: 0.75rem; /* left-3 */
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary-green);
+    font-size: 1rem;
+}
+
+.filter-buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem; /* gap-3 */
+    justify-content: center;
+}
+
+.filter-button {
+    padding: 0.5rem 1rem; /* px-4 py-2 */
+    border-radius: var(--border-radius-full);
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500; /* font-medium */
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    border: none; /* כדי למנוע כפילות עם צבע הרקע */
+}
+
+.filter-button.inactive {
+    background-color: var(--light-green-bg);
+    color: var(--primary-green);
+}
+
+.filter-button.inactive:hover {
+    background-color: rgba(232, 245, 233, 0.8); /* hover:bg-[#c8e6c9] - מעט כהה יותר מהרגיל */
+}
+
+.filter-button.active {
+    background-color: var(--primary-green);
+    color: var(--card-background);
+}
+
+/* Recipes Grid */
+.recipes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 */
+    gap: 1.5rem; /* gap-6 */
+}
+
+.recipe-card {
+    background-color: var(--card-background);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+    border: 1px solid var(--border-light-green);
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.recipe-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px); /* hover:shadow-md transition-all */
+}
+
+.recipe-image-wrapper {
+    position: relative;
+    height: 12rem; /* h-48 */
+}
+
+.recipe-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.recipe-likes {
+    position: absolute;
+    top: 0.75rem; /* top-3 */
+    left: 0.75rem; /* left-3 */
+    background-color: var(--card-background);
+    padding: 0.5rem 0.75rem; /* p-2 */
+    border-radius: var(--border-radius-full);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    font-size: 0.75rem; /* text-xs */
+    font-weight: 500; /* font-medium */
+}
+
+.recipe-likes-icon {
+    color: var(--red-heart);
+    margin-left: 0.25rem; /* ml-1.5 */
+}
+
+.recipe-content {
+    padding: 1rem; /* p-4 */
+}
+
+.recipe-title {
+    font-size: 1.25rem; /* text-xl */
+    font-weight: 600; /* font-semibold */
+    margin-bottom: 0.75rem; /* mb-3 */
+    color: var(--primary-green);
+}
+
+.recipe-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem; /* text-sm */
+    color: var(--text-opacity-80);
+    margin-bottom: 1rem; /* mb-4 */
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+}
+
+.meta-icon {
+    margin-left: 0.375rem; /* ml-1.5 */
+    font-size: 1rem;
+}
+
+.dietary-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem; /* gap-2 */
+    margin-bottom: 1rem; /* mb-4 */
+}
+
+.dietary-tag {
+    padding: 0.25rem 0.625rem; /* px-2.5 py-1 */
+    background-color: var(--light-green-bg);
+    color: var(--primary-green);
+    font-size: 0.75rem; /* text-xs */
+    border-radius: var(--border-radius-full);
+}
+
+.view-recipe-button {
+    width: 100%;
+    padding: 0.5rem 1rem; /* py-2 */
+    background-color: var(--primary-green);
+    color: var(--card-background);
+    border-radius: var(--border-radius-full);
+    transition: all 0.2s ease-in-out;
+    font-weight: 500; /* font-medium */
+    border: none;
+    cursor: pointer;
+}
+
+.view-recipe-button:hover {
+    background-color: var(--secondary-green);
+}
+
+/* Loading State */
+.loading-spinner-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 16rem; /* h-64 */
+}
+
+.loading-spinner {
+    animation: spin 1s linear infinite;
+    border: 4px solid var(--light-green-bg); /* border-4 border-[#e8f5e9] */
+    border-top: 4px solid var(--primary-green); /* border-t-[#15803d] */
+    border-radius: 50%;
+    height: 3rem; /* h-12 */
+    width: 3rem; /* w-12 */
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* No Recipes Found State */
+.no-recipes-found {
+    text-align: center;
+    padding: 3rem 1.5rem; /* py-12 */
+    background-color: var(--lightest-green-bg); /* bg-[#f7fee7] */
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-light-green);
+    max-width: 448px; /* max-w-md */
+    margin: 0 auto;
+}
+
+.no-recipes-title {
+    font-size: 1.25rem; /* text-xl */
+    font-weight: 600; /* font-semibold */
+    color: var(--primary-green);
+    margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.no-recipes-text {
+    color: var(--text-opacity-80);
+    margin-bottom: 1.5rem; /* mb-6 */
+}
+
+.clear-filter-button {
+    padding: 0.5rem 1.25rem; /* px-5 py-2 */
+    background-color: var(--primary-green);
+    color: var(--card-background);
+    border-radius: var(--border-radius-full);
+    transition: all 0.2s ease-in-out;
+    font-weight: 500; /* font-medium */
+    border: none;
+    cursor: pointer;
+}
+
+.clear-filter-button:hover {
+    background-color: var(--secondary-green);
+}
+
+/* Custom scrollbar (if not defined globally) */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-green);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-green);
+}
+
+/* Ensure RTL text direction works properly for inputs */
+[dir="rtl"] .search-input {
+    text-align: right;
+    padding-left: 0.75rem; /* כדי לפנות מקום לאייקון */
+    padding-right: 2.5rem; /* כדי שהטקסט לא ייכנס לאייקון */
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 1024px) { /* lg */
+    .recipes-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.25rem;
+    }
+}
+
+@media (max-width: 768px) { /* sm */
+    .recipes-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+    .page-title {
+        font-size: 1.8rem;
+    }
+    .page-description {
+        font-size: 0.9rem;
+    }
+    .search-input {
+        padding: 0.6rem 0.6rem 0.6rem 2.2rem;
+    }
+    .search-icon {
+        font-size: 0.9rem;
+        left: 0.6rem;
+    }
+    .filter-button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    .recipe-title {
+        font-size: 1.1rem;
+    }
+    .recipe-meta, .dietary-tag {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .recipes-grid {
+        grid-template-columns: 1fr; /* Stack on small screens */
+        gap: 1rem;
+    }
+    .recipes-container {
+        padding: 1.5rem 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 1.6rem;
+    }
+    .search-input {
+        font-size: 0.9rem;
+    }
+    .filter-button {
+        font-size: 0.75rem;
+    }
+    .recipe-title {
+        font-size: 1rem;
+    }
+}

@@ -1,0 +1,733 @@
+/* src/components/PersonalArea.css */
+
+/* ייבוא גופנים (לדוגמה, Heebo מ-Google Fonts) */
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&display=swap');
+
+/* הגדרות כלליות */
+:root {
+    --primary-green: #0d9488;
+    --secondary-green: #0f766e;
+    --light-green-bg: #ecfdf5;
+    --lightest-green-bg: #f0fdf4;
+    --text-dark: #1e293b;
+    --text-medium: #475569;
+    --text-light: #64748b;
+    --background-color: #f8fafc;
+    --border-color: #e2e8f0;
+    --red-alert: #dc2626;
+    --red-alert-hover: #b91c1c;
+    --shadow-light: rgba(0, 0, 0, 0.04); /* צללים עדינים מאוד */
+    --shadow-medium: rgba(0, 0, 0, 0.08);
+    --shadow-strong: rgba(0, 0, 0, 0.12);
+    --border-radius-sm: 0.25rem; /* רדיוסים קטנים יותר */
+    --border-radius-md: 0.5rem;
+    --border-radius-lg: 0.75rem;
+    --border-radius-full: 9999px;
+}
+
+/* הגדרת גופן בסיסית */
+body {
+    font-family: 'Heebo', sans-serif;
+    direction: rtl;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+/* ------------------------------------- */
+/* כללי לכל העמוד (Wrapper) */
+/* ------------------------------------- */
+.personal-area-wrapper {
+    min-height: 100vh;
+    background-color: var(--background-color);
+    padding: 0.6rem 0.3rem; /* פדינגים קטנים במיוחד במובייל */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.personal-area-container {
+    width: 100%;
+    margin: 0 auto;
+    max-width: 320px; /* הגבלה חזקה במובייל */
+}
+
+/* ------------------------------------- */
+/* מצבי טעינה/שגיאה */
+/* ------------------------------------- */
+.loading-spinner-container,
+.error-message,
+.info-message {
+    min-height: 70vh; /* מותאם כדי לתפוס פחות גובה */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--background-color);
+    color: var(--text-medium);
+    text-align: center;
+    padding: 0.5rem;
+}
+
+.spinner {
+    width: 1.8rem;
+    height: 1.8rem;
+    border: 1.5px solid transparent; /* עבה יותר */
+    border-top-color: var(--primary-green);
+    border-right-color: var(--primary-green);
+    border-bottom-color: var(--primary-green);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 0.4rem;
+}
+
+.error-message {
+    font-size: 0.8rem;
+}
+
+.info-message {
+    font-size: 0.75rem;
+}
+
+/* ------------------------------------- */
+/* כותרת ראשית (Main Header) */
+/* ------------------------------------- */
+.main-header-card {
+    background-color: #ffffff;
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 1px 1px var(--shadow-light);
+    padding: 0.5rem; /* פדינג מוקטן מאוד מאוד */
+    margin-bottom: 0.6rem; /* מרווח מוקטן מאוד מאוד */
+    text-align: center;
+    border-bottom: 1px solid var(--primary-green);
+}
+
+.main-title {
+    font-size: 1.1rem; /* קטן יותר במובייל */
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.15rem; /* צמצום מרג'ין תחתון */
+}
+
+.welcome-message {
+    font-size: 0.7rem; /* קטן יותר במובייל */
+    color: var(--text-medium);
+}
+
+/* ------------------------------------- */
+/* תפריט לשוניות (Tabs Navigation) */
+/* ------------------------------------- */
+.tabs-navigation {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem; /* מרווח מוקטן */
+    background-color: #ffffff;
+    border-radius: var(--border-radius-full);
+    box-shadow: 0 1px 3px var(--shadow-light);
+    padding: 0.08rem; /* פדינג קטן במיוחד */
+}
+
+.tab-button {
+    padding: 0.25rem 0.6rem; /* פדינג מוקטן מאוד */
+    border-radius: var(--border-radius-full);
+    font-size: 0.7rem; /* גופן קטן יותר */
+    font-weight: 500;
+    background-color: transparent;
+    color: var(--text-medium);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    flex-grow: 1;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.tab-button.active {
+    background-color: var(--primary-green);
+    color: #ffffff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    transform: none;
+}
+
+.tab-button:not(.active):hover {
+    background-color: var(--lightest-green-bg);
+    color: var(--primary-green);
+    transform: none;
+}
+
+/* ------------------------------------- */
+/* תוכן הלשונית (כללי) */
+/* ------------------------------------- */
+.tab-content-card {
+    background-color: #ffffff;
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 2px 6px var(--shadow-medium);
+    overflow: hidden;
+    padding: 0.8rem; /* פדינג מוקטן */
+}
+
+.section-title {
+    font-size: 1rem; /* קטן יותר במובייל */
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.8rem; /* מרווח מוקטן */
+    text-align: center;
+}
+
+.section-subtitle {
+    font-size: 0.85rem; /* קטן יותר במובייל */
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 0.6rem; /* מרווח מוקטן */
+    text-align: right;
+}
+
+/* ------------------------------------- */
+/* כרטיסים כלליים (רקע וצל) */
+/* ------------------------------------- */
+.profile-summary-card,
+.personal-info-card,
+.goals-card,
+.stat-item-card,
+.progress-card,
+.diet-plan-card,
+.daily-recommendations-card,
+.recommendation-item {
+    background-color: var(--lightest-green-bg);
+    border-radius: var(--border-radius-md);
+    padding: 0.8rem; /* פדינג מוקטן */
+    box-shadow: inset 0 0.5px 1px rgba(0, 0, 0, 0.01);
+}
+
+/* ------------------------------------- */
+/* לשונית פרופיל */
+/* ------------------------------------- */
+.profile-tab-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-content-columns {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem; /* מרווח מוקטן */
+    width: 100%;
+}
+
+.profile-avatar {
+    width: 4.5rem; /* אווטאר קטן מאוד במובייל */
+    height: 4.5rem;
+    font-size: 1.8rem; /* גופן קטן יותר */
+    margin-bottom: 0.6rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.profile-name {
+    font-size: 0.9rem; /* גופן קטן יותר */
+    font-weight: 600;
+}
+
+.profile-email {
+    font-size: 0.7rem; /* גופן קטן יותר */
+    color: var(--text-medium);
+    margin-top: 0.05rem;
+}
+
+.personal-info-card {
+    padding: 0.8rem;
+}
+
+.info-item {
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.4rem;
+}
+
+.info-value {
+    font-size: 0.75rem; /* גופן קטן יותר */
+    font-weight: 600;
+}
+
+.info-label {
+    font-size: 0.65rem; /* גופן קטן יותר */
+}
+
+.bmi-value {
+    font-size: 1rem; /* גופן קטן יותר */
+    font-weight: 700;
+}
+
+.goals-card {
+    margin-top: 0.8rem;
+}
+
+.goals-text {
+    font-size: 0.75rem; /* גופן קטן יותר */
+    line-height: 1.2;
+}
+
+/* ------------------------------------- */
+/* לשונית נתונים (Stats Tab) */
+/* ------------------------------------- */
+.stats-tab-content {
+    padding: 0.8rem;
+}
+
+.stats-grid-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.stat-item-card {
+    padding: 0.8rem;
+}
+
+.stat-number {
+    font-size: 1.6rem; /* קטן יותר במובייל */
+    font-weight: 800;
+    margin-bottom: 0.2rem;
+}
+
+.stat-label {
+    font-size: 0.8rem; /* קטן יותר במובייל */
+}
+
+.progress-card {
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.progress-bar-container {
+    height: 0.8rem; /* קטן יותר */
+    margin-bottom: 0.4rem;
+}
+
+.progress-labels {
+    font-size: 0.7rem;
+}
+
+.progress-percentage {
+    font-size: 0.8rem;
+}
+
+/* ------------------------------------- */
+/* לשונית תוכנית תזונה (Plan Tab) */
+/* ------------------------------------- */
+.plan-tab-content {
+    padding: 0.8rem;
+}
+
+.plan-content-columns {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.diet-plan-card {
+    padding: 0.8rem;
+}
+
+.diet-plan-text {
+    font-size: 0.75rem;
+    line-height: 1.2;
+}
+
+.daily-recommendations-card {
+    padding: 0.8rem;
+}
+
+.recommendations-grid-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    margin-bottom: 0.6rem;
+}
+
+.recommendation-item {
+    padding: 0.7rem;
+}
+
+.recommendation-number {
+    font-size: 1.2rem; /* קטן יותר במובייל */
+    font-weight: 700;
+    margin-bottom: 0.08rem;
+}
+
+.recommendation-label {
+    font-size: 0.75rem; /* קטן יותר במובייל */
+}
+
+/* ------------------------------------- */
+/* כפתורים כלליים */
+/* ------------------------------------- */
+.button-group {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+.primary-button {
+    padding: 0.4rem 1rem; /* פדינג מוקטן */
+    font-size: 0.75rem; /* גופן קטן יותר */
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease-in-out;
+}
+
+.primary-button:hover {
+    transform: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* ------------------------------------- */
+/* כפתור התנתקות */
+/* ------------------------------------- */
+.logout-button-container {
+    padding-top: 0.6rem;
+}
+
+.logout-button {
+    padding: 0.3rem 0.8rem; /* פדינג מוקטן */
+    font-size: 0.7rem; /* גופן קטן יותר */
+    box-shadow: 0 0.5px 2px rgba(0, 0, 0, 0.04);
+}
+
+.logout-button:hover {
+    transform: none;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* ===================================== */
+/* מדיה קווריות - התאמה למסכים גדולים יותר */
+/* ===================================== */
+
+/* עבור מסכים ברוחב 768px ומעלה (טאבלטים לרוחב, מחשבים קטנים) */
+@media (min-width: 768px) {
+    .personal-area-container {
+        max-width: 900px; /* הגדלה לרוחב נרחב יותר */
+    }
+
+    .personal-area-wrapper {
+        padding: 1rem 0.6rem; /* פדינג מוגדל מעט מהמובייל */
+    }
+
+    .main-header-card {
+        padding: 0.7rem; /* פדינג מוקטן */
+        margin-bottom: 0.8rem; /* מרווח מוקטן */
+    }
+
+    .main-title {
+        font-size: 1.3rem;
+    }
+
+    .welcome-message {
+        font-size: 0.8rem;
+    }
+
+    .tabs-navigation {
+        padding: 0.1rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .tab-button {
+        padding: 0.35rem 0.75rem;
+        font-size: 0.75rem;
+    }
+
+    .tab-content-card {
+        padding: 1rem;
+    }
+
+    .section-title {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 0.7rem;
+    }
+
+    /* לשונית פרופיל - פיצול ל-2 טורים */
+    .profile-content-columns {
+        flex-direction: row;
+        gap: 1rem;
+    }
+
+    .profile-avatar {
+        width: 5.5rem;
+        height: 5.5rem;
+        font-size: 2.2rem;
+    }
+
+    .profile-name {
+        font-size: 1rem;
+    }
+
+    .profile-email {
+        font-size: 0.8rem;
+    }
+
+    .personal-info-card {
+        padding: 1rem;
+    }
+
+    .goals-card {
+        margin-top: 1rem;
+        padding: 1rem;
+    }
+
+    .info-value {
+        font-size: 0.85rem;
+    }
+
+    .info-label {
+        font-size: 0.75rem;
+    }
+
+    .bmi-value {
+        font-size: 1.1rem;
+    }
+
+    .goals-text {
+        font-size: 0.8rem;
+    }
+
+    /* לשונית נתונים - הצגת 3 נתונים בשורה אחת */
+    .stats-grid-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+    .stat-item-card {
+        padding: 1rem;
+    }
+
+    .stat-number {
+        font-size: 1.8rem;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+    }
+
+    .progress-card {
+        padding: 1rem;
+    }
+
+    /* לשונית תוכנית תזונה - פיצול ל-2 טורים */
+    .plan-content-columns {
+        flex-direction: row;
+        gap: 1rem;
+    }
+
+    .diet-plan-card {
+        padding: 1rem;
+    }
+
+    .daily-recommendations-card {
+        padding: 1rem;
+    }
+
+    .recommendations-grid-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+    .recommendation-item {
+        padding: 0.8rem;
+    }
+
+    .recommendation-number {
+        font-size: 1.4rem;
+    }
+
+    .recommendation-label {
+        font-size: 0.8rem;
+    }
+
+    .primary-button {
+        padding: 0.5rem 1.2rem;
+        font-size: 0.8rem;
+    }
+
+    .logout-button {
+        padding: 0.4rem 1rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* עבור מסכים ברוחב 1024px ומעלה (מחשבים רחבים) */
+@media (min-width: 1024px) {
+    .personal-area-container {
+        max-width: 1050px; /* רוחב אופטימלי, רחב יותר */
+    }
+    
+    .personal-area-wrapper {
+        padding: 1.2rem 0.8rem;
+    }
+
+    .main-header-card {
+        padding: 0.9rem;
+        margin-bottom: 0.9rem;
+    }
+
+    .main-title {
+        font-size: 1.4rem;
+    }
+
+    .welcome-message {
+        font-size: 0.85rem;
+    }
+
+    .tabs-navigation {
+        margin-bottom: 1.5rem;
+    }
+
+    .tab-button {
+        padding: 0.4rem 0.9rem;
+        font-size: 0.8rem;
+    }
+
+    .tab-content-card {
+        padding: 1.2rem;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .section-subtitle {
+        font-size: 0.95rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .profile-avatar {
+        width: 6.5rem;
+        height: 6.5rem;
+        font-size: 2.8rem;
+    }
+
+    .profile-name {
+        font-size: 1.1rem;
+    }
+
+    .profile-email {
+        font-size: 0.85rem;
+    }
+
+    .info-value {
+        font-size: 0.9rem;
+    }
+
+    .info-label {
+        font-size: 0.8rem;
+    }
+
+    .bmi-value {
+        font-size: 1.2rem;
+    }
+
+    .goals-text {
+        font-size: 0.85rem;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+    }
+
+    .stat-label {
+        font-size: 0.95rem;
+    }
+
+    .recommendation-number {
+        font-size: 1.6rem;
+    }
+
+    .recommendation-label {
+        font-size: 0.85rem;
+    }
+
+    .primary-button {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.9rem;
+    }
+
+    .logout-button {
+        padding: 0.45rem 1.1rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* עבור מסכים ברוחב 1280px ומעלה (מחשבים רחבים מאוד) */
+@media (min-width: 1280px) {
+    .personal-area-container {
+        max-width: 1200px; /* רוחב מקסימלי לנצל את המסך */
+    }
+
+    .personal-area-wrapper {
+        padding: 1.5rem 1rem;
+    }
+
+    .main-title {
+        font-size: 1.6rem;
+    }
+
+    .welcome-message {
+        font-size: 0.95rem;
+    }
+
+    .tab-button {
+        font-size: 0.85rem;
+    }
+
+    .tab-content-card {
+        padding: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 1.4rem;
+    }
+
+    .section-subtitle {
+        font-size: 1.05rem;
+    }
+
+    .profile-avatar {
+        width: 7.5rem;
+        height: 7.5rem;
+        font-size: 3.2rem;
+    }
+    
+    .profile-name {
+        font-size: 1.2rem;
+    }
+
+    .profile-email {
+        font-size: 0.9rem;
+    }
+
+    .primary-button {
+        padding: 0.7rem 1.8rem;
+        font-size: 0.95rem;
+    }
+
+    .logout-button {
+        padding: 0.5rem 1.3rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* עבור מסכים ברוחב 1440px ומעלה (מסכים גדולים במיוחד) */
+@media (min-width: 1440px) {
+    .personal-area-container {
+        max-width: 1300px; /* רוחב מקסימלי ביותר, לנצל את המסך */
+    }
+    .personal-area-wrapper {
+        padding: 2rem 1.5rem;
+    }
+}

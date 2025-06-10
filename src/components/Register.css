@@ -1,0 +1,202 @@
+/* src/components/Register.css */
+
+/* ייבוא גופנים (לדוגמה, Heebo מ-Google Fonts) */
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&display=swap');
+
+/* הגדרות משתנים כלליים (ניתן להעביר לקובץ משותף אם יש כזה) */
+:root {
+    --primary-green: #0d9488;
+    --secondary-green: #0f766e;
+    --light-green-bg: #ecfdf5;
+    --lightest-green-bg: #f0fdf4;
+    --text-dark: #1e293b;
+    --text-medium: #475569;
+    --text-light: #64748b;
+    --background-color: #f8fafc;
+    --border-color: #e2e8f0;
+    --error-bg: #fef2f2;
+    --error-border: #fca5a5;
+    --error-text: #b91c1c;
+    --button-blue: #3b82f6;
+    --button-blue-hover: #2563eb;
+    --focus-ring-blue: #3b82f6; /* צבע טבעת מיקוד */
+    --shadow-light: rgba(0, 0, 0, 0.05);
+    --shadow-medium: rgba(0, 0, 0, 0.1);
+    --border-radius-sm: 0.3rem;
+    --border-radius-md: 0.6rem;
+    --border-radius-lg: 0.8rem;
+}
+
+/* הגדרת גופן בסיסית לעמוד הרישום */
+.register-page-wrapper {
+    font-family: 'Heebo', sans-serif;
+    direction: rtl;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--background-color);
+    padding: 2rem 1rem; /* פדינג כללי לעמוד */
+    box-sizing: border-box; /* חשוב למניעת גלישה */
+}
+
+.register-container {
+    max-width: 448px; /* max-w-md ב-TailwindCSS (448px) */
+    background-color: #ffffff;
+    padding: 2rem; /* p-8 ב-TailwindCSS (32px) */
+    border-radius: var(--border-radius-lg); /* rounded-xl ב-TailwindCSS */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); /* shadow-md ב-TailwindCSS */
+    width: 100%; /* כדי שיקח את כל הרוחב הזמין בתוך ה-max-width */
+}
+
+.register-header {
+    text-align: center;
+    margin-bottom: 1.5rem; /* mb-6 ב-TailwindCSS */
+}
+
+.register-title {
+    font-size: 2rem; /* text-3xl ב-TailwindCSS (30px) */
+    font-weight: 700; /* font-bold ב-TailwindCSS */
+    color: var(--text-dark); /* text-[#1e293b] */
+    margin-bottom: 0.5rem; /* mb-2 ב-TailwindCSS */
+}
+
+.register-subtitle {
+    font-size: 1rem; /* בדרך כלל font-base */
+    color: var(--text-light); /* text-[#64748b] */
+}
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem; /* space-y-5 ב-TailwindCSS (20px) */
+}
+
+.form-group {
+    /* עוטף כל label ו-input */
+    margin-bottom: 1rem; /* מרווח בין קבוצות שדות, אם לא משתמשים ב-gap על הפורם */
+}
+
+.form-label {
+    display: block;
+    font-size: 0.875rem; /* text-sm ב-TailwindCSS (14px) */
+    font-weight: 500; /* font-medium ב-TailwindCSS */
+    color: #334155; /* text-[#334155] */
+    margin-bottom: 0.25rem; /* mb-1 ב-TailwindCSS */
+}
+
+.form-input {
+    appearance: none;
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem; /* px-4 py-3 ב-TailwindCSS (16px 12px) */
+    border: 1px solid var(--border-color); /* border border-[#e2e8f0] */
+    border-radius: var(--border-radius-md); /* rounded-lg ב-TailwindCSS */
+    color: var(--text-dark); /* text-[#1e293b] */
+    transition: all 0.15s ease-in-out; /* transition duration-150 */
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--focus-ring-blue); /* focus:border-[#3b82f6] */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25); /* focus:ring-2 focus:ring-[#3b82f6] */
+}
+
+.password-input-wrapper {
+    position: relative;
+}
+
+.toggle-password-button {
+    position: absolute;
+    inset-y: 0;
+    left: 0; /* בגלל dir="rtl" */
+    padding-left: 0.75rem; /* pl-3 ב-TailwindCSS */
+    display: flex;
+    align-items: center;
+    color: var(--text-light); /* text-[#64748b] */
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+.toggle-password-button svg {
+    height: 1.25rem; /* h-5 ב-TailwindCSS */
+    width: 1.25rem; /* w-5 ב-TailwindCSS */
+}
+
+.error-message {
+    background-color: var(--error-bg); /* bg-[#fef2f2] */
+    border: 1px solid var(--error-border); /* border border-[#fca5a5] */
+    color: var(--error-text); /* text-[#b91c1c] */
+    padding: 0.75rem 1rem; /* px-4 py-3 */
+    border-radius: var(--border-radius-md); /* rounded-lg */
+    margin-top: 1.25rem; /* מרווח מהשדה הקודם אם אין gap */
+    font-size: 0.875rem; /* text-sm */
+}
+
+.submit-button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* כדי למרכז את הספינר */
+    padding: 0.75rem 1rem; /* py-3 px-4 */
+    border: 1px solid transparent; /* border border-transparent */
+    border-radius: var(--border-radius-md); /* rounded-lg */
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500; /* font-medium */
+    color: #ffffff; /* text-[#ffffff] */
+    background-color: var(--button-blue); /* bg-[#3b82f6] */
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; /* transition duration-150 */
+}
+
+.submit-button:hover {
+    background-color: var(--button-blue-hover); /* hover:bg-[#2563eb] */
+}
+
+.submit-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* focus:ring-2 focus:ring-offset-2 focus:ring-[#3b82f6] */
+}
+
+.submit-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.loading-spinner {
+    animation: spin 1s linear infinite;
+    margin-left: 0.75rem; /* mr-3 ב-TailwindCSS (12px) */
+    margin-right: -0.25rem; /* -ml-1 ב-TailwindCSS (4px) */
+    height: 1.25rem; /* h-5 */
+    width: 1.25rem; /* w-5 */
+    color: #ffffff; /* text-white */
+}
+
+/* אנימציית ספינר */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.login-link-container {
+    text-align: center;
+    margin-top: 1.5rem; /* mt-6 ב-TailwindCSS */
+}
+
+.login-link-text {
+    font-size: 0.875rem; /* text-sm */
+    color: var(--text-light); /* text-[#64748b] */
+}
+
+.login-link {
+    font-weight: 500; /* font-medium */
+    color: var(--button-blue); /* text-[#3b82f6] */
+    text-decoration: none;
+    transition: color 0.15s ease-in-out;
+}
+
+.login-link:hover {
+    color: var(--button-blue-hover); /* hover:text-[#2563eb] */
+}

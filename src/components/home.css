@@ -1,97 +1,238 @@
+/* src/components/home.css */
+
+/* ייבוא גופנים (וודא שזה מיושר עם שאר קבצי ה-CSS שלך) */
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&family=Montserrat:wght@700;800&family=Open+Sans:wght@400&family=Roboto:wght@400&display=swap');
+
+/* הגדרות משתנים כלליים (וודא עקביות בכל קבצי ה-CSS) */
+:root {
+    --primary-green: #15803d;
+    --secondary-green-light: #81c784;
+    --light-green-bg-faded: #f6fff7;
+    --text-gray-dark: #4a5568;
+    --text-gray-medium: #718096;
+    --card-background: #ffffff;
+    --border-radius-lg: 0.8rem;
+    --border-radius-full: 9999px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --transition-duration: 300ms;
+}
+
 body {
-  margin: 0;
-    font-family: 'Roboto', 'Open Sans', Arial, sans-serif;
-  padding: 0;
-  background-color: #f6fff7;
-  direction: rtl; /* אם אתה רוצה יישור לימין */
+    margin: 0;
+    font-family: 'Assistant', Arial, sans-serif; /* גופן כללי, שונה מ-Roboto/Open Sans כי Assistant יותר מתאים לעברית */
+    padding: 0;
+    background-color: var(--light-green-bg-faded); /* שימוש במשתנה */
+    direction: rtl; /* יישור לימין */
+    /* חשוב מאוד: הוסף padding-top כדי למנוע תוכן שמוסתר על ידי ה-Navbar */
+    padding-top: 80px; /* תתאים את הערך הזה לגובה המדויק של ה-Navbar שלך */
 }
 
-.main-title {
-  color: #15803d;
-  font-family: 'Assistant', 'Roboto', Arial, sans-serif;
-  font-weight: 700;
-  text-align: center;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-}
 #root {
-  margin: 0;
-  padding: 0;
-  text-align: initial;
+    margin: 0;
+    padding: 0;
+    text-align: initial;
 }
 
-nav {
-  border-bottom: solid #81c784;
-  border-radius: 0 0 10rem 10rem;
-  background: white;
+/* סגנונות ה-Navbar עצמו */
+.navbar { /* קלאס חדש שנחיל על ה-nav element */
+    position: fixed; /* הצמדה ל-viewport */
+    top: 0; /* הצמדה לחלק העליון */
+    width: 100%; /* תופס את כל הרוחב */
+    z-index: 1000; /* וודא שהוא מעל שאר התוכן */
+    background: white; /* רקע לבן */
+    border-bottom: solid 2px var(--secondary-green-light); /* border-b-green-500 */
+    border-radius: 0 0 10rem 10rem; /* rounded-b-[10rem] */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* צל עדין */
+    padding-top: 1rem; /* py-4 */
+    padding-bottom: 1rem; /* py-4 */
+    display: flex; /* ל-flexbox */
+    justify-content: space-around; /* ריווח בין האלמנטים */
+    align-items: center; /* יישור אנכי למרכז */
+    height: 80px; /* גובה קבוע, חשוב להתאים ל-padding-top ב-body */
+    transition: all var(--transition-duration) ease-in-out; /* אנימציה עדינה למעבר */
 }
-.mb-2{
+
+/* התאמות ל-Navbar במובייל */
+.navbar-mobile-open { /* קלאס למצב תפריט פתוח במובייל */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh; /* תופס את כל גובה המסך */
+    flex-direction: column;
+    justify-content: flex-start; /* יישור למעלה במצב עמודה */
+    padding-top: 4rem; /* רווח מהחלק העליון במובייל */
+    border-radius: 0; /* מבטל את הקימור במובייל */
+    overflow-y: auto; /* מאפשר גלילה אם יש יותר מדי פריטים */
+    background-color: rgba(255, 255, 255, 0.95); /* רקע מעט שקוף */
+}
+
+/* כפתור המבורגר */
+.hamburger-button {
+    position: fixed;
+    top: 1rem; /* top-4 */
+    left: 1rem; /* left-4 */
+    z-index: 1050; /* מעל ה-Navbar במובייל */
+    padding: 0.5rem; /* p-2 */
+    background-color: white;
+    border-radius: var(--border-radius-full); /* rounded-full */
+    box-shadow: var(--shadow-md); /* shadow-md */
+    border: none;
+    outline: none;
+    cursor: pointer;
+    display: flex; /* כדי למרכז אייקון */
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--transition-duration) ease;
+}
+
+.hamburger-button:hover {
+    transform: scale(1.05);
+}
+
+
+/* סגנונות לשאר האלמנטים בקובץ home.css */
+.main-title {
+    color: var(--primary-green);
+    font-family: 'Assistant', 'Roboto', Arial, sans-serif;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.mb-2 {
     padding: 1rem;
 }
+
 .topics {
-  padding: 0.5rem 2rem;
+    padding: 0.5rem 2rem;
+    font-size: 1.4rem;
+    font-family: 'Roboto', 'Open Sans', Arial, sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    color: var(--primary-green);
+    text-decoration: none;
+    transition: font-weight 0.2s, padding 0.2s, color 0.2s;
+    padding-bottom: 2px;
 }
+
 .topics:hover {
-  color: #095527;
+    color: #095527;
+    cursor: pointer;
 }
+
+.topics:focus,
+.topics:active,
+.topics:visited {
+    text-decoration: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 .live-healthy-title {
-  text-align: center;
-  font-family: 'Montserrat', 'Assistant', Arial, sans-serif;
-  font-size: 3rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: #15803d;
-  margin-top: 2.5rem;
-  margin-bottom: 1.5rem;
+    text-align: center;
+    font-family: 'Montserrat', 'Assistant', Arial, sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--primary-green);
+    margin-top: 2.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .live-healthy-title span {
-  color: #81c784; /* ירוק בהיר */
-  font-weight: 700;
+    color: var(--secondary-green-light);
+    font-weight: 700;
 }
+
+/* כפתור הצ'אט-בוט */
 .but {
-  position: fixed; /* במקום position: absolute */
-  bottom: 2rem;
-  right: 2rem;
-  background-color: white;
-  border: none;
-  border-radius: 49%;
-  width: 7rem;
-  height: 6rem;
-  font-size: 2rem;
-  box-shadow: 0 2rem 6rem rgba(0,0,0,0.2);
-  cursor: pointer;
-  z-index: 1000; /* להבטיח שהכפתור יהיה מעל תוכן אחר */
+    position: fixed; /* הצמדה ל-viewport */
+    bottom: 2rem;
+    right: 2rem;
+    background-color: white;
+    border: none;
+    border-radius: 49%; /* עגול */
+    width: 7rem;
+    height: 6rem;
+    font-size: 2rem;
+    box-shadow: 0 2rem 6rem rgba(0,0,0,0.2);
+    cursor: pointer;
+    z-index: 1000; /* מעל ה-Navbar אם הוא במצב מובייל פתוח, או כל תוכן אחר */
+    display: flex; /* למיקום אייקון */
+    align-items: center;
+    justify-content: center;
+    transition: box-shadow 0.2s, transform 0.2s;
 }
 
-       .but:hover {
-  box-shadow: 0 3rem 6rem rgba(21,128,61,0.15);
-  transform: scale(1.08);
-  transition: box-shadow 0.2s, transform 0.2s;
-}
-      .color{
-        padding:2;
-      }
-.topics:focus,
-.topics:active,
-.topics:hover,
-.topics:visited {
-  text-decoration: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-.topics {
-  font-size: 1.4rem;
-  font-family: 'Roboto', 'Open Sans', Arial, sans-serif;
-  font-weight: 300;
-  letter-spacing: 0.08em;
-  color: #15803d;
-  text-decoration: none;
-  transition: font-weight 0.2s, padding 0.2s;
-  padding-bottom: 2px; 
+.but:hover {
+    box-shadow: 0 3rem 6rem rgba(21,128,61,0.15);
+    transform: scale(1.08);
 }
 
-.topics:hover {
-   color: #095527;
-cursor:pointer;
+.color {
+    /* הוספתי padding-top מיוחד עבור תוכן ה-main כדי להתמודד עם ה-Navbar במצב mobile open */
+    /* זה יתבטל או ישתנה בהתאם לאיך ה-Navbar ממוקם ב-App.tsx */
+    /* אם ה-Navbar יוסר מפה ויהיה ב-App.tsx, שים לב שיש לנהל את ה-padding-top ב-body באופן גלובלי. */
+    /* ההגדרות האלו מתאימות למצב שה-Home.tsx מכיל את ה-Navbar *וגם* את תוכן עמוד הבית */
+}
+
+/* הסרתי את ה-pt-64 מ-JSX והעברתי לכאן */
+.main-content-area {
+    padding-top: 0; /* ברירת מחדל */
+    transition: padding-top var(--transition-duration) ease;
+}
+.main-content-area.menu-open-mobile {
+    padding-top: 16rem; /* 64 * 0.25rem = 16rem */
+}
+
+/* מדיה קווריות עבור רספונסיביות */
+@media (max-width: 767px) { /* מסכים קטנים מ-768px (מובייל) */
+    .navbar {
+        /* הסגנונות האלה ישתנו כשקלאס navbar-mobile-open פעיל */
+        flex-direction: column;
+        justify-content: flex-start;
+        height: auto; /* גובה אוטומטי במובייל */
+        padding-top: 4rem; /* רווח מהחלק העליון */
+        /* הסגנון הבא חשוב להסתרת ה-Navbar כאשר הוא לא פתוח */
+        display: none; /* נסתר כברירת מחדל במובייל */
+    }
+    .navbar-mobile-open { /* נדרש קלאס כזה להפעלה מה-JSX */
+        display: flex; /* הצג כשהתפריט פתוח */
+    }
+
+    .topics {
+        font-size: 1.2rem;
+        padding: 0.8rem 1rem; /* ריפוד גדול יותר לפריטים במובייל */
+        width: 100%; /* תופס את כל הרוחב */
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+    .topics:last-child {
+        margin-bottom: 0;
+    }
+    .mb-2 { /* אייקונים מעל טקסט בקישור */
+        margin-bottom: 0.5rem;
+        padding: 0.5rem;
+    }
+
+    .but {
+        width: 5rem;
+        height: 5rem;
+        font-size: 1.5rem;
+        bottom: 1rem;
+        right: 1rem;
+    }
+}
+
+@media (min-width: 768px) { /* מסכים גדולים מ-768px (דסקטופ) */
+    .hamburger-button {
+        display: none; /* הסתר את כפתור ההמבורגר בדסקטופ */
+    }
+    .navbar {
+        display: flex; /* וודא שה-Navbar תמיד גלוי בדסקטופ */
+        position: fixed; /* הצמדה גם לדסקטופ */
+    }
 }

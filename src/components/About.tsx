@@ -2,32 +2,39 @@ import React from 'react';
 import { BsHeartFill, BsLightbulb, BsPeople } from 'react-icons/bs';
 import { GiWeightScale } from 'react-icons/gi';
 import { MdOutlineHealthAndSafety } from 'react-icons/md';
-import Home from './home';
+
+// ייבוא קובץ ה-CSS החדש
+import './About.css';
+
+// הערה: נראה שהרכיב Home מיובא כאן אבל לא בשימוש,
+// אם הוא לא נחוץ, ניתן להסירו. אם כן, וודא שיש לו עיצוב משלו
+// או שהוא מותאם לעיצובים החדשים.
+// import Home from './home'; 
 
 const About = () => {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Home></Home>
-      <h1 className="text-center text-4xl md:text-5xl font-bold text-[#15803d] mb-12 tracking-wide font-['Montserrat','Assistant',Arial,sans-serif]">
-        אודות <span className="text-[#81c784]">Live Healthy</span>
-      </h1>
-      
-      <div className="text-center max-w-3xl mx-auto mb-16">
-        <p className="text-lg text-gray-700 leading-relaxed font-['Roboto','Open_Sans',Arial,sans-serif]">
-          ברוכים הבאים ל-Live Healthy, המקום שבו בריאות ואיכות חיים נפגשים. 
-          אנחנו מאמינים שתזונה נכונה היא המפתח לחיים בריאים ומאושרים יותר.
-        </p>
+    <div className="about-container">
+      {/* <Home />  אם נחוץ, אחרת מחק */}
+      <div className="about-header">
+        <h1 className="about-title">
+          אודות <span className="">Live Healthy</span>
+        </h1>
       </div>
       
-      <div className="mb-16">
-        <h2 className="text-center text-3xl font-bold text-[#15803d] mb-8 relative pb-4 after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-16 after:h-1 after:bg-[#81c784]">
+      <p className="about-intro-text">
+        ברוכים הבאים ל-Live Healthy, המקום שבו בריאות ואיכות חיים נפגשים. 
+        אנחנו מאמינים שתזונה נכונה היא המפתח לחיים בריאים ומאושרים יותר.
+      </p>
+      
+      <div className="mission-section">
+        <h2 className="section-title">
           המשימה שלנו
         </h2>
-        <div className="flex flex-col md:flex-row items-center bg-[#f6fff7] p-8 rounded-xl shadow-sm">
-          <div className="flex-shrink-0 mb-6 md:mb-0 md:ml-8">
-            <BsHeartFill size={60} className="text-[#15803d]" />
+        <div className="mission-content">
+          <div className="mission-icon">
+            <BsHeartFill />
           </div>
-          <p className="text-lg text-gray-700 leading-relaxed">
+          <p className="mission-text">
             המשימה שלנו היא לעזור לאנשים לחיות חיים בריאים יותר באמצעות תזונה מאוזנת, 
             מתכונים בריאים וטעימים, ומידע מקצועי שמותאם אישית לצרכים של כל אחד ואחת.
             אנחנו מאמינים שאוכל בריא יכול וצריך להיות טעים, מגוון ונגיש לכולם.
@@ -35,78 +42,78 @@ const About = () => {
         </div>
       </div>
       
-      <div className="mb-16">
-        <h2 className="text-center text-3xl font-bold text-[#15803d] mb-8 relative pb-4 after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-16 after:h-1 after:bg-[#81c784]">
+      <div className="values-section">
+        <h2 className="section-title">
           הערכים שלנו
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="bg-white p-8 rounded-xl shadow-sm text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-md">
-            <MdOutlineHealthAndSafety size={40} className="text-[#15803d] mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-[#15803d] mb-3">בריאות מעל הכל</h3>
-            <p className="text-gray-600">אנחנו מציבים את הבריאות שלכם בראש סדר העדיפויות, ומספקים מידע מבוסס מדעית.</p>
+        <div className="values-grid">
+          <div className="value-card">
+            <MdOutlineHealthAndSafety className="value-icon" />
+            <h3 className="value-title">בריאות מעל הכל</h3>
+            <p className="value-description">אנחנו מציבים את הבריאות שלכם בראש סדר העדיפויות, ומספקים מידע מבוסס מדעית.</p>
           </div>
           
-          <div className="bg-white p-8 rounded-xl shadow-sm text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-md">
-            <BsLightbulb size={40} className="text-[#15803d] mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-[#15803d] mb-3">חדשנות</h3>
-            <p className="text-gray-600">אנחנו תמיד מחפשים דרכים חדשות ויצירתיות לשלב תזונה בריאה בחיי היומיום.</p>
+          <div className="value-card">
+            <BsLightbulb className="value-icon" />
+            <h3 className="value-title">חדשנות</h3>
+            <p className="value-description">אנחנו תמיד מחפשים דרכים חדשות ויצירתיות לשלב תזונה בריאה בחיי היומיום.</p>
           </div>
           
-          <div className="bg-white p-8 rounded-xl shadow-sm text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-md">
-            <BsPeople size={40} className="text-[#15803d] mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-[#15803d] mb-3">קהילתיות</h3>
-            <p className="text-gray-600">אנחנו מאמינים בכוח של קהילה תומכת בדרך לאורח חיים בריא יותר.</p>
+          <div className="value-card">
+            <BsPeople className="value-icon" />
+            <h3 className="value-title">קהילתיות</h3>
+            <p className="value-description">אנחנו מאמינים בכוח של קהילה תומכת בדרך לאורח חיים בריא יותר.</p>
           </div>
           
-          <div className="bg-white p-8 rounded-xl shadow-sm text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-md">
-            <GiWeightScale size={40} className="text-[#15803d] mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-[#15803d] mb-3">איזון</h3>
-            <p className="text-gray-600">אנחנו מעודדים גישה מאוזנת לתזונה, ללא דיאטות קיצוניות או הגבלות מיותרות.</p>
+          <div className="value-card">
+            <GiWeightScale className="value-icon" />
+            <h3 className="value-title">איזון</h3>
+            <p className="value-description">אנחנו מעודדים גישה מאוזנת לתזונה, ללא דיאטות קיצוניות או הגבלות מיותרות.</p>
           </div>
         </div>
       </div>
       
-      <div className="mb-16">
-        <h2 className="text-center text-3xl font-bold text-[#15803d] mb-8 relative pb-4 after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-16 after:h-1 after:bg-[#81c784]">
+      <div className="team-section">
+        <h2 className="section-title">
           הצוות שלנו
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div className="bg-white p-8 rounded-xl shadow-sm text-center">
-            <div className="w-32 h-32 bg-[#f6fff7] rounded-full flex items-center justify-center text-xl font-bold text-[#15803d] mx-auto mb-6">
+        <div className="team-grid">
+          <div className="team-member-card">
+            <div className="team-member-avatar">
               <span>ד"ר</span>
             </div>
-            <h3 className="text-xl font-semibold text-[#15803d] mb-2">ד"ר שרה כהן</h3>
-            <p className="text-[#81c784] font-medium mb-4">דיאטנית קלינית</p>
-            <p className="text-gray-600">מומחית בתזונה מותאמת אישית עם 15 שנות ניסיון בליווי תהליכי ירידה במשקל.</p>
+            <h3 className="team-member-name">ד"ר שרה כהן</h3>
+            <p className="team-member-role">דיאטנית קלינית</p>
+            <p className="team-member-description">מומחית בתזונה מותאמת אישית עם 15 שנות ניסיון בליווי תהליכי ירידה במשקל.</p>
           </div>
           
-          <div className="bg-white p-8 rounded-xl shadow-sm text-center">
-            <div className="w-32 h-32 bg-[#f6fff7] rounded-full flex items-center justify-center text-xl font-bold text-[#15803d] mx-auto mb-6">
+          <div className="team-member-card">
+            <div className="team-member-avatar">
               <span>שף</span>
             </div>
-            <h3 className="text-xl font-semibold text-[#15803d] mb-2">שף יוסי לוי</h3>
-            <p className="text-[#81c784] font-medium mb-4">שף ומפתח מתכונים</p>
-            <p className="text-gray-600">שף בעל ניסיון של 20 שנה, מתמחה בהפיכת מתכונים קלאסיים לגרסאות בריאות יותר.</p>
+            <h3 className="team-member-name">שף יוסי לוי</h3>
+            <p className="team-member-role">שף ומפתח מתכונים</p>
+            <p className="team-member-description">שף בעל ניסיון של 20 שנה, מתמחה בהפיכת מתכונים קלאסיים לגרסאות בריאות יותר.</p>
           </div>
           
-          <div className="bg-white p-8 rounded-xl shadow-sm text-center">
-            <div className="w-32 h-32 bg-[#f6fff7] rounded-full flex items-center justify-center text-xl font-bold text-[#15803d] mx-auto mb-6">
+          <div className="team-member-card">
+            <div className="team-member-avatar">
               <span>M.Sc</span>
             </div>
-            <h3 className="text-xl font-semibold text-[#15803d] mb-2">מיכל אברהם</h3>
-            <p className="text-[#81c784] font-medium mb-4">תזונאית ספורט</p>
-            <p className="text-gray-600">מומחית בתזונת ספורטאים, עם התמחות בבניית תפריטים מותאמים לפעילות גופנית.</p>
+            <h3 className="team-member-name">מיכל אברהם</h3>
+            <p className="team-member-role">תזונאית ספורט</p>
+            <p className="team-member-description">מומחית בתזונת ספורטאים, עם התמחות בבניית תפריטים מותאמים לפעילות גופנית.</p>
           </div>
         </div>
       </div>
       
-      <div className="bg-[#f6fff7] p-8 rounded-xl shadow-sm text-center">
-        <h2 className="text-3xl font-bold text-[#15803d] mb-6">צרו קשר</h2>
-        <p className="text-lg text-gray-700 leading-relaxed">
+      <div className="contact-section">
+        <h2 className="contact-title">צרו קשר</h2>
+        <p className="contact-text">
           יש לכם שאלות? רוצים לדעת עוד? אנחנו כאן בשבילכם!
           <br />
-          שלחו לנו מייל ל-<a href="mailto:info@livehealthy.co.il" className="text-[#15803d] font-medium hover:text-[#81c784] hover:underline transition-colors">info@livehealthy.co.il</a> 
-          או התקשרו ל-<a href="tel:+97235555555" className="text-[#15803d] font-medium hover:text-[#81c784] hover:underline transition-colors">03-5555555</a>
+          שלחו לנו מייל ל-<a href="mailto:info@livehealthy.co.il">info@livehealthy.co.il</a> 
+          או התקשרו ל-<a href="tel:+97235555555">03-5555555</a>
         </p>
       </div>
     </div>

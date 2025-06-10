@@ -1,0 +1,206 @@
+/* src/components/FoodSearchComponent.css */
+
+/* ייבוא גופנים ומשתנים גלובליים - חשוב לשמור על עקביות! */
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&family=Montserrat:wght@700;800&family=Open+Sans:wght@400&family=Roboto:wght@400&display=swap');
+
+:root {
+    --primary-green: #15803d;
+    --secondary-green-light: #81c784;
+    --light-green-bg-faded: #f6fff7;
+    --text-gray-dark: #4a5568;
+    --text-gray-medium: #718096;
+    --card-background: #ffffff;
+    --border-radius-lg: 0.8rem;
+    --border-radius-full: 9999px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --transition-duration: 300ms;
+}
+
+/* סגנונות כלליים לעמוד חיפוש האוכל */
+.food-search-container {
+    max-width: 900px; /* רוחב מוגבל כמו שאר התוכן */
+    margin: 3rem auto; /* מרווח מלמעלה ולמטה ומרכז */
+    padding: 2rem;
+    background-color: var(--light-green-bg-faded); /* רקע בהיר */
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md); /* צל עדין */
+    text-align: center; /* יישור טקסט למרכז */
+    direction: rtl; /* כיווניות מימין לשמאל */
+    font-family: 'Assistant', Arial, sans-serif;
+    color: var(--text-gray-dark);
+}
+
+.food-search-container h1 {
+    font-family: 'Montserrat', 'Assistant', Arial, sans-serif;
+    font-size: 2.2rem; /* גודל כותרת */
+    font-weight: 700;
+    color: var(--primary-green);
+    margin-bottom: 2rem; /* רווח תחתון */
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.food-search-container h1::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4rem; /* קו תחתון דקורטיבי */
+    height: 0.25rem;
+    background-color: var(--secondary-green-light);
+    border-radius: var(--border-radius-full);
+}
+
+/* סגנונות לטופס החיפוש */
+.food-search-form {
+    display: flex;
+    flex-wrap: wrap; /* מאפשר שבירת שורות במובייל */
+    justify-content: center;
+    gap: 1rem; /* רווח בין האלמנטים */
+    margin-bottom: 2rem;
+}
+
+.food-search-input {
+    flex-grow: 1; /* תופס מקום זמין */
+    max-width: 350px; /* רוחב מקסימלי לשדה קלט */
+    padding: 0.8rem 1.2rem;
+    border: 1px solid var(--secondary-green-light);
+    border-radius: var(--border-radius-lg);
+    font-size: 1rem;
+    color: var(--text-gray-dark);
+    transition: all var(--transition-duration) ease-in-out;
+    background-color: var(--card-background);
+}
+
+.food-search-input::placeholder {
+    color: var(--text-gray-medium);
+}
+
+.food-search-input:focus {
+    outline: none;
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.2);
+}
+
+/* סגנונות לכפתורים */
+.food-search-form button,
+.refetch-button {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: var(--border-radius-lg);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-duration) ease-in-out;
+    white-space: nowrap; /* מונע שבירת מילים בכפתור */
+}
+
+.food-search-form button[type="submit"] {
+    background-color: var(--primary-green);
+    color: white;
+}
+
+.food-search-form button[type="submit"]:hover:not(:disabled) {
+    background-color: #095527; /* ירוק כהה יותר */
+    transform: translateY(-2px);
+}
+
+.food-search-form button[type="button"], /* כפתור Clear Search */
+.refetch-button {
+    background-color: var(--secondary-green-light);
+    color: var(--primary-green);
+}
+
+.food-search-form button[type="button"]:hover:not(:disabled),
+.refetch-button:hover:not(:disabled) {
+    background-color: #68b36b; /* ירוק בהיר מעט כהה יותר */
+    transform: translateY(-2px);
+}
+
+.food-search-form button:disabled,
+.refetch-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none; /* מבטל טרנספורמציה כשמנוטרל */
+}
+
+/* הודעות מצב */
+.loading-message,
+.error-message,
+.no-results-message {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    color: var(--text-gray-dark);
+}
+
+.error-message {
+    color: red; /* צבע אדום לשגיאות */
+    font-weight: 700;
+}
+
+/* תוצאות החיפוש */
+.food-result-card {
+    background-color: var(--card-background);
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    margin-top: 2rem;
+    text-align: right; /* יישור פרטי המזון לימין */
+}
+
+.food-result-card h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-green);
+    margin-bottom: 1rem;
+}
+
+.food-result-card p {
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.food-result-card p strong {
+    color: var(--secondary-green-light);
+}
+
+/* כפתור Refetch Current Search */
+.refetch-button-wrapper {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+/* רספונסיביות */
+@media (max-width: 768px) {
+    .food-search-container {
+        padding: 1.5rem;
+        margin: 2rem auto;
+    }
+
+    .food-search-container h1 {
+        font-size: 1.8rem;
+    }
+
+    .food-search-form {
+        flex-direction: column; /* כפתורים ושדה קלט בעמודה */
+        gap: 0.8rem;
+    }
+
+    .food-search-input {
+        max-width: 100%; /* תופס את כל הרוחב */
+    }
+
+    .food-search-form button,
+    .refetch-button {
+        width: 100%; /* תופס את כל הרוחב */
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .food-search-container h1 {
+        font-size: 1.5rem;
+    }
+}
