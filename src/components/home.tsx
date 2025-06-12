@@ -5,11 +5,14 @@ import { RiMenu3Line, RiCloseLine } from "react-icons/ri";
 import './home.css'; // ייבוא ה-CSS של ה-Navbar
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import ChatBot from "./ChatBot";
 // import Logo from './logo.tsx'; // אם ה-Logo שייך ל-Navbar, השאר אותו. אחרת, הסר.
 
 function Home() { // אם שינית את השם ל-Navbar, עדכן כאן גם
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [showChatBot, setShowChatBot] = useState(false);
+
   // ה-useLocation וה-isHomePage כבר לא נחוצים כאן כי ה-Navbar גלובלי
   // const location = useLocation();
   // const isHomePage = location.pathname === "/" || location.pathname === "/home";
@@ -93,9 +96,19 @@ function Home() { // אם שינית את השם ל-Navbar, עדכן כאן גם
       </nav>
 
       {/* כפתור הצ'אט-בוט - נשאר כאן אם הוא שייך ל-Navbar באופן קבוע */}
-      <button className="but" aria-label="chat-bot">
-        <BsChatDots size={40} color="#15803d"/>
-      </button>
+      <button
+  className="but"
+  aria-label="chat-bot"
+  onClick={() => setShowChatBot(prev => !prev)}
+>
+  <BsChatDots size={40} color="#15803d" />
+</button>
+{showChatBot && (
+  <div className="chatbot-container">
+    <ChatBot />
+  </div>
+)}
+
     </>
   );
 };
