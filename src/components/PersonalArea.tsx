@@ -25,6 +25,20 @@ function PersonalArea() {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState<boolean>(false);
 
+  const personalityOptions = [
+    { value: 'friendly', label: 'חברותי ותומך' },
+    { value: 'strict', label: 'קשוח וממוקד' },
+    { value: 'motivational', label: 'מדרבן ואנרגטי' },
+    { value: 'scientific', label: 'הסברי ומדויק' },
+  ];
+
+  const personalityLabels: Record<string, string> = {
+    friendly: 'חברותי ותומך',
+    strict: 'קשוח וממוקד',
+    motivational: 'מדרבן ואנרגטי',
+    scientific: 'הסברי ומדויק',
+  };
+
   const { user, isAuthenticated, isLoading: isLoadingAuth } = useAuthStore();
   const navigate = useNavigate();
 
@@ -33,8 +47,8 @@ function PersonalArea() {
       setLoadingData(true);
       const data = await personalService.getPersonalArea();
       setPersonalData(data);
-       console.log("Fetched personal data:", data); // הוסף את זה
-    console.log("Personal data ID:", data?.id); // הוסף את זה
+      console.log("Fetched personal data:", data); // הוסף את זה
+      console.log("Personal data ID:", data?.id); // הוסף את זה
       setEditFormData({
         startWeight: data.startWeight || undefined,
         height: 170, // עדיין ערך סטטי לדוגמה, שנה לפי הצורך
@@ -127,7 +141,7 @@ function PersonalArea() {
 
       // טיפול ב-dietaryPreference: אם foodName שונה, עדכן את כל האובייקט
       if (editFormData.dietaryPreferenceFoodName !== undefined &&
-          personalData.dietaryPreference?.foodName !== editFormData.dietaryPreferenceFoodName) {
+        personalData.dietaryPreference?.foodName !== editFormData.dietaryPreferenceFoodName) {
         updatePayload.dietaryPreference = {
           ...personalData.dietaryPreference, // העתק שדות קיימים כמו id, userId, like
           foodName: editFormData.dietaryPreferenceFoodName,
@@ -137,13 +151,13 @@ function PersonalArea() {
           like: personalData.dietaryPreference?.like || 0, // הנח like ברירת מחדל
         };
       } else if (editFormData.dietaryPreferenceFoodName === '') { // אם רוקנו את השדה
-          updatePayload.dietaryPreference = { // אובייקט ריק או null בהתאם לצורך ה-API
-            ...personalData.dietaryPreference,
-            foodName: '',
-            id: personalData.dietaryPreference?.id || 0,
-            userId: personalData.id,
-            like: personalData.dietaryPreference?.like || 0,
-          };
+        updatePayload.dietaryPreference = { // אובייקט ריק או null בהתאם לצורך ה-API
+          ...personalData.dietaryPreference,
+          foodName: '',
+          id: personalData.dietaryPreference?.id || 0,
+          userId: personalData.id,
+          like: personalData.dietaryPreference?.like || 0,
+        };
       }
 
 
@@ -279,14 +293,22 @@ function PersonalArea() {
                   </div>
                   <div className="form-group">
                     <label htmlFor="chatPersonality" className="form-label">מטרות / הערות:</label>
-                    <textarea
+                    <select
                       id="chatPersonality"
                       name="chatPersonality"
                       value={editFormData.chatPersonality ?? ''}
                       onChange={handleFormChange}
-                      className="form-input textarea-input"
-                      rows={4}
-                    ></textarea>
+                      className="form-input"
+                    >
+                      <option value="">בחר סגנון מאמן</option>
+                      {personalityOptions.map(opt => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+
+
                   </div>
                   <div className="form-group">
                     <label htmlFor="dietaryPreferenceFoodName" className="form-label">תוכנית תזונה (טקסט חופשי):</label>
@@ -351,8 +373,11 @@ function PersonalArea() {
 
                       <div className="goals-card">
                         <h3 className="section-subtitle">המטרות שלי</h3>
-                        <p className="goals-text">{personalData?.chatPersonality || 'לא הוגדרו מטרות.'}</p>
+                        <p className="goals-text">
+                          {personalityLabels[personalData?.chatPersonality ?? ''] || 'לא נבחר סגנון.'}
+                        </p>
                       </div>
+
                     </div>
                   </div>
 
@@ -395,17 +420,16 @@ function PersonalArea() {
                     <div
                       className="progress-bar-fill"
                       style={{
-                        width: `${
-                          Math.max(
-                            0,
-                            Math.min(
-                              100,
-                              ((personalData.startWeight - (personalData.weightTracing?.weight || personalData.startWeight)) /
-                                (personalData.startWeight - personalData.goalWeight)) *
-                                100
-                            )
-                          ) || 0
-                        }%`,
+                        width: `${Math.max(
+                          0,
+                          Math.min(
+                            100,
+                            ((personalData.startWeight - (personalData.weightTracing?.weight || personalData.startWeight)) /
+                              (personalData.startWeight - personalData.goalWeight)) *
+                            100
+                          )
+                        ) || 0
+                          }%`,
                       }}
                     ></div>
                   )}
@@ -414,17 +438,16 @@ function PersonalArea() {
                   <span>יעד</span>
                   <span className="progress-percentage">
                     {personalData?.startWeight && personalData?.goalWeight
-                      ? `${
-                          Math.max(
-                            0,
-                            Math.min(
-                              100,
-                              ((personalData.startWeight - (personalData.weightTracing?.weight || personalData.startWeight)) /
-                                (personalData.startWeight - personalData.goalWeight)) *
-                                100
-                            )
-                          ).toFixed(0)
-                        }% הושלמו`
+                      ? `${Math.max(
+                        0,
+                        Math.min(
+                          100,
+                          ((personalData.startWeight - (personalData.weightTracing?.weight || personalData.startWeight)) /
+                            (personalData.startWeight - personalData.goalWeight)) *
+                          100
+                        )
+                      ).toFixed(0)
+                      }% הושלמו`
                       : '0% הושלמו'}
                   </span>
                   <span>התחלה</span>
@@ -438,29 +461,29 @@ function PersonalArea() {
               <h2 className="section-title">תוכנית התזונה שלי</h2>
               <div className="plan-content-columns">
                 <div className="plan-column-item">
-                    <div className="diet-plan-card">
-                      <h3 className="section-subtitle">סוג תזונה</h3>
-                      <p className="diet-plan-text">{personalData?.dietaryPreference?.foodName || 'לא הוגדרה תוכנית תזונה.'}</p>
-                    </div>
+                  <div className="diet-plan-card">
+                    <h3 className="section-subtitle">סוג תזונה</h3>
+                    <p className="diet-plan-text">{personalData?.dietaryPreference?.foodName || 'לא הוגדרה תוכנית תזונה.'}</p>
+                  </div>
                 </div>
                 <div className="plan-column-item">
-                    <div className="daily-recommendations-card">
-                      <h3 className="section-subtitle">המלצות יומיות</h3>
-                      <div className="recommendations-grid-container">
-                          <div className="recommendation-item">
-                              <div className="recommendation-number">2000</div>
-                              <div className="recommendation-label">קלוריות</div>
-                          </div>
-                          <div className="recommendation-item">
-                              <div className="recommendation-number">150</div>
-                              <div className="recommendation-label">חלבונים (גרם)</div>
-                          </div>
-                          <div className="recommendation-item">
-                              <div className="recommendation-number">3</div>
-                              <div className="recommendation-label">מים (ליטר)</div>
-                          </div>
+                  <div className="daily-recommendations-card">
+                    <h3 className="section-subtitle">המלצות יומיות</h3>
+                    <div className="recommendations-grid-container">
+                      <div className="recommendation-item">
+                        <div className="recommendation-number">2000</div>
+                        <div className="recommendation-label">קלוריות</div>
+                      </div>
+                      <div className="recommendation-item">
+                        <div className="recommendation-number">150</div>
+                        <div className="recommendation-label">חלבונים (גרם)</div>
+                      </div>
+                      <div className="recommendation-item">
+                        <div className="recommendation-number">3</div>
+                        <div className="recommendation-label">מים (ליטר)</div>
                       </div>
                     </div>
+                  </div>
                 </div>
               </div>
 

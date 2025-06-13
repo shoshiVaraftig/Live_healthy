@@ -13,6 +13,15 @@ const ChatBot: React.FC = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const [personality, setPersonality] = useState<string>('friendly');
+
+
+  useEffect(() => {
+    fetch('/api/User/GetPersonality')
+      .then(res => res.json())
+      .then(data => setPersonality(data.personality));
+  }, []);
+
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -27,21 +36,30 @@ const ChatBot: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/chat', {
+      const response = await fetch('http://localhost:5181/api/PersonalTrainer/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: [...messages, userMessage] })
+        body: JSON.stringify({
+          message: input.trim(),
+          personality: personality
+        })
       });
 
       const data = await response.json();
+
       const trainerReply = data.reply || 'Sorry, I didn’t understand that.';
       setMessages(prev => [...prev, { role: 'trainer', content: trainerReply }]);
-    } catch {
-      setMessages(prev => [...prev, { role: 'trainer', content: 'Error contacting trainer.' }]);
+    } catch (error) {
+      setMessages(prev => [...prev, {
+        role: 'trainer',
+        content: 'Server error. Please try again later.'
+      }]);
+      console.error('Chat error:', error);
     }
 
     setLoading(false);
   };
+
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') handleSend();
