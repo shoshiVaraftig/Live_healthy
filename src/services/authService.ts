@@ -35,12 +35,15 @@ export const authService = {
             setToken(data.token); // עדכון הטוקן בחנות Zustand וב-localStorage
             const decoded: any = jwtDecode(data.token);
             setUser({
-                id: decoded.sub || decoded.jti,
+                id: decoded.userId,
                 username: decoded.name || decoded.unique_name,
                 email: decoded.email,
+
             });
             setIsAuthenticated(true);
             console.log('User logged in successfully and store updated.');
+            console.log("Decoded token:", decoded);
+
 
         } catch (error) {
             setToken(null);

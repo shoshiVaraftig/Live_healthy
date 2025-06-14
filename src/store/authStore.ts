@@ -4,7 +4,7 @@ import { jwtDecode } from 'jwt-decode'; // npm install jwt-decode
 
 // הגדרת ממשק (interface) למשתמש
 interface User {
-  id: string;
+  id: number;
   username: string;
   email: string;
   // כאן אפשר להוסיף שדות נוספים שתשלפי מה-JWT או ממידע משתמש מהשרת
@@ -54,7 +54,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         // בדוק אם הטוקן לא פג תוקף (אופציונלי אך מומלץ)
         if (decodedToken.exp * 1000 > Date.now()) { // exp הוא זמן בתאריך יוניקס בשניות
           const user: User = {
-            id: decodedToken.sub || decodedToken.jti, // sub או jti הם לרוב ה-ID
+            id: decodedToken.userId || decodedToken.jti, // sub או jti הם לרוב ה-ID
             username: decodedToken.name || decodedToken.unique_name, // שדות נפוצים לשם משתמש
             email: decodedToken.email, // שדה נפוץ לאימייל
           };

@@ -20,11 +20,12 @@ export interface PersonalArea
     "weight": 0,
     "date": "2025-06-10T07:24:06.790Z"
   },
-  "dietaryPreference": {
-    "id": 0,
-    "userId": 0,
-    "foodName": "string",
-    "like": 0
-  },
-  "chatPersonality": "string"
+  "height": number,
+  "dietaryPreferences": {
+    "id": number,
+    "userId": number,
+    "foodName": string,
+    "like": string,
+  }[],
+  "chatPersonality": string
 }

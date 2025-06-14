@@ -10,7 +10,8 @@ import type { PersonalArea as UserDataFromApi } from "../types/personal";
 // ממשק עבור נתוני הטופס שניתנים לעדכון - חלק מממשק PersonalArea
 interface UpdateUserData extends Partial<UserDataFromApi> {
   height?: number; // זה עדיין שדה מקומי ל-UI, לא נשלח ל-API
-  dietaryPreferenceFoodName?: string;
+  dietaryPreferenceFoodNames?: string[];
+  chatPersonality?: string
 }
 
 function PersonalArea() {
@@ -41,20 +42,25 @@ function PersonalArea() {
 
   const { user, isAuthenticated, isLoading: isLoadingAuth } = useAuthStore();
   const navigate = useNavigate();
-
   const fetchPersonalData = async () => {
     try {
       setLoadingData(true);
-      const data = await personalService.getPersonalArea();
-      setPersonalData(data);
-      console.log("Fetched personal data:", data); // הוסף את זה
-      console.log("Personal data ID:", data?.id); // הוסף את זה
+      if (!user?.id) throw new Error("User ID is missing");
+
+      const currentUser = await personalService.getPersonalArea(user.id);
+
+      console.log("👤 משתמש נוכחי:", currentUser);
+      console.log("📏 גובה מהשרת:", currentUser.height);
+      console.log("⚖️ משקל מהשרת:", currentUser.startWeight);
+
+      setPersonalData(currentUser);
       setEditFormData({
-        startWeight: data.startWeight || undefined,
-        height: 170, // עדיין ערך סטטי לדוגמה, שנה לפי הצורך
-        chatPersonality: data.chatPersonality || '',
-        dietaryPreferenceFoodName: data.dietaryPreference?.foodName || '',
+        startWeight: currentUser.startWeight || undefined,
+        height: currentUser.height || undefined,
+        chatPersonality: currentUser.chatPersonality || '',
+        dietaryPreferenceFoodNames: currentUser.dietaryPreferences?.map(p => p.foodName) || [],
       });
+
       setErrorData(null);
     } catch (err: any) {
       setErrorData(err.message);
@@ -66,6 +72,7 @@ function PersonalArea() {
       setLoadingData(false);
     }
   };
+
 
   useEffect(() => {
     if (isLoadingAuth) {
@@ -91,14 +98,14 @@ function PersonalArea() {
     if (personalData) {
       setEditFormData({
         startWeight: personalData.startWeight || undefined,
-        height: editFormData.height || 170,
+        height: personalData.height || 170,
         chatPersonality: personalData.chatPersonality || '',
-        dietaryPreferenceFoodName: personalData.dietaryPreference?.foodName || '',
+        dietaryPreferenceFoodNames: personalData.dietaryPreferences?.map(p => p.foodName) || [],
       });
     }
   };
 
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     if (name === 'startWeight' || name === 'height') {
       setEditFormData(prev => ({
@@ -111,12 +118,18 @@ function PersonalArea() {
         chatPersonality: value,
       }));
     } else if (name === 'dietaryPreferenceFoodName') {
+      const items = value
+        .split(',')
+        .map(v => v.trim())
+        .filter(v => v !== '');
+
       setEditFormData(prev => ({
         ...prev,
-        dietaryPreferenceFoodName: value,
+        dietaryPreferenceFoodNames: items,
       }));
     }
   };
+
 
   const handleSaveClick = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -124,8 +137,9 @@ function PersonalArea() {
     setSaveError(null);
     setSaveSuccess(false);
 
+
     try {
-      if (!personalData?.id) { // ודא שיש ID למשתמש
+      if (!user?.id) { // ודא שיש ID למשתמש
         throw new Error("User ID is missing, cannot update personal area.");
       }
 
@@ -140,32 +154,32 @@ function PersonalArea() {
       };
 
       // טיפול ב-dietaryPreference: אם foodName שונה, עדכן את כל האובייקט
-      if (editFormData.dietaryPreferenceFoodName !== undefined &&
-        personalData.dietaryPreference?.foodName !== editFormData.dietaryPreferenceFoodName) {
-        updatePayload.dietaryPreference = {
-          ...personalData.dietaryPreference, // העתק שדות קיימים כמו id, userId, like
-          foodName: editFormData.dietaryPreferenceFoodName,
-          // אם ID של dietaryPreference נדרש ב-backend, ודא שהוא מוגדר
-          id: personalData.dietaryPreference?.id || 0, // הנח id ברירת מחדל אם הוא לא קיים
-          userId: personalData.id,
-          like: personalData.dietaryPreference?.like || 0, // הנח like ברירת מחדל
-        };
-      } else if (editFormData.dietaryPreferenceFoodName === '') { // אם רוקנו את השדה
-        updatePayload.dietaryPreference = { // אובייקט ריק או null בהתאם לצורך ה-API
-          ...personalData.dietaryPreference,
-          foodName: '',
-          id: personalData.dietaryPreference?.id || 0,
-          userId: personalData.id,
-          like: personalData.dietaryPreference?.like || 0,
-        };
+      if (editFormData.dietaryPreferenceFoodNames !== undefined) {
+        // צור מערך חדש של dietaryPreferences
+        updatePayload.dietaryPreferences = editFormData.dietaryPreferenceFoodNames.map((name, index) => ({
+          foodName: name,
+          id: personalData?.dietaryPreferences?.[index]?.id || 0,
+          userId: user.id,
+          like: personalData?.dietaryPreferences?.[index]?.like ?? '',
+        }));
       }
+
 
 
       // הסר שדות שאינם ניתנים לעדכון או שאינם נשלחים
       delete (updatePayload as any).id; // ה-ID ב-URL, לא בגוף הבקשה
       delete (updatePayload as any).password; // לא נשלח סיסמה בעדכון פרופיל
-
-      await personalService.updatePersonalArea(personalData.id, updatePayload); // העבר את ה-ID וה-payload המעודכן
+      await personalService.updatePartialPersonalArea(user.id, {
+        startWeight: editFormData.startWeight,
+        height: editFormData.height,
+        chatPersonality: editFormData.chatPersonality,
+        dietaryPreferences: (editFormData.dietaryPreferenceFoodNames || []).map((name) => ({
+          foodName: name,
+          id: 0,
+          userId: user.id,
+          like: ''
+        }))
+      });;// העבר את ה-ID וה-payload המעודכן
       await fetchPersonalData(); // רענן את הנתונים לאחר שמירה מוצלחת
       setSaveSuccess(true);
       setIsEditing(false); // חזור למצב צפייה לאחר שמירה
@@ -184,9 +198,9 @@ function PersonalArea() {
     if (personalData) {
       setEditFormData({
         startWeight: personalData.startWeight || undefined,
-        height: 170,
+        height: personalData.height || undefined,
         chatPersonality: personalData.chatPersonality || '',
-        dietaryPreferenceFoodName: personalData.dietaryPreference?.foodName || '',
+        dietaryPreferenceFoodNames: personalData.dietaryPreferences?.map(p => p.foodName) || [],
       });
     }
   };
@@ -315,7 +329,7 @@ function PersonalArea() {
                     <textarea
                       id="dietaryPreferenceFoodName"
                       name="dietaryPreferenceFoodName"
-                      value={editFormData.dietaryPreferenceFoodName ?? ''}
+                      value={editFormData.dietaryPreferenceFoodNames ?? ''}
                       onChange={handleFormChange}
                       className="form-input textarea-input"
                       rows={4}
@@ -463,8 +477,13 @@ function PersonalArea() {
                 <div className="plan-column-item">
                   <div className="diet-plan-card">
                     <h3 className="section-subtitle">סוג תזונה</h3>
-                    <p className="diet-plan-text">{personalData?.dietaryPreference?.foodName || 'לא הוגדרה תוכנית תזונה.'}</p>
-                  </div>
+                    v<ul className="diet-plan-text">
+                      {personalData.dietaryPreferences?.length
+                        ? personalData.dietaryPreferences.map((item, i) => (
+                          <li key={item.id || i}>{item.foodName}</li>
+                        ))
+                        : <li>לא הוגדרה תוכנית תזונה.</li>}
+                    </ul>                  </div>
                 </div>
                 <div className="plan-column-item">
                   <div className="daily-recommendations-card">
