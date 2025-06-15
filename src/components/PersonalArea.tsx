@@ -6,6 +6,7 @@ import { authService } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
 import './PersonalArea.css';
 import type { PersonalArea as UserDataFromApi } from "../types/personal";
+import { usePersonalStore } from '../store/personalStore';
 
 // ממשק עבור נתוני הטופס שניתנים לעדכון - חלק מממשק PersonalArea
 interface UpdateUserData extends Partial<UserDataFromApi> {
@@ -16,6 +17,7 @@ interface UpdateUserData extends Partial<UserDataFromApi> {
 
 function PersonalArea() {
   const [personalData, setPersonalData] = useState<UserDataFromApi | null>(null);
+  const { setPersonalData: setPersonalDataToStore } = usePersonalStore();
   const [loadingData, setLoadingData] = useState(true);
   const [errorData, setErrorData] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('profile');
@@ -54,6 +56,7 @@ function PersonalArea() {
       console.log("⚖️ משקל מהשרת:", currentUser.startWeight);
 
       setPersonalData(currentUser);
+      setPersonalDataToStore(currentUser);         // ל־store
       setEditFormData({
         startWeight: currentUser.startWeight || undefined,
         height: currentUser.height || undefined,
