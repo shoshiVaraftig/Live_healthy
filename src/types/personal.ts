@@ -11,7 +11,8 @@ export interface PersonalArea
   "birthDate": "2025-06-10T07:24:06.790Z",
   "programLevel": 0,
   "startWeight": 0,
-  "goalWeight": 0,
+  "currentWeight": number,
+  "goalWeight": number,
   "goalDate": "2025-06-10T07:24:06.790Z",
   "startDate": "2025-06-10T07:24:06.790Z",
   "weightTracing": {
