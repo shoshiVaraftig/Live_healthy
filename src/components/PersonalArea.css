@@ -385,9 +385,14 @@ body {
 /* ------------------------------------- */
 /* כפתור התנתקות */
 /* ------------------------------------- */
+
 .logout-button-container {
     padding-top: 0.6rem;
+    display: flex;
+    justify-content: flex-start;
+    direction: ltr; /* במידת הצורך */
 }
+
 
 .logout-button {
     padding: 0.3rem 0.8rem; /* פדינג מוקטן */
@@ -855,3 +860,62 @@ body {
 .button-group {
   margin-top: 1rem;
 }
+
+.edit-button-green {
+  background-color: #4CAF50; /* ירוק */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.edit-button-green:hover {
+  background-color: #45a049; /* ירוק כהה יותר */
+}
+
+
+.food-suggestions-list {
+  list-style: none;
+  margin: 0.3rem 0;
+  padding: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.food-suggestions-list li {
+  padding: 0.4rem;
+  cursor: pointer;
+}
+
+.food-suggestions-list li:hover {
+  background-color: #f0f0f0;
+}
+
+.selected-foods-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.selected-food-item {
+  background: #e0ffe0;
+  border-radius: 1rem;
+  padding: 0.3rem 0.7rem;
+  display: flex;
+  align-items: center;
+}
+
+.selected-food-item button {
+  background: none;
+  border: none;
+  color: red;
+  margin-right: 0.5rem;
+  cursor: pointer;
+}
+

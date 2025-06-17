@@ -100,7 +100,7 @@ const ProfileTab: React.FC<Props> = ({
           {saveSuccess && <div className="success-message">הפרטים נשמרו בהצלחה!</div>}
 
           <div className="form-actions-group">
-            <button type="submit" className="primary-button" disabled={savingChanges}>
+            <button type="submit" className="edit-button-green" disabled={savingChanges}>
               {savingChanges ? (
                 <>
                   <div className="spinner small-spinner"></div>
@@ -148,7 +148,7 @@ const ProfileTab: React.FC<Props> = ({
             </div>
           </div>
           <div className="button-group">
-            <button onClick={handleEditClick} className="primary-button">עדכון פרטים</button>
+            <button onClick={handleEditClick} className="edit-button-green">עדכון פרטים</button>
           </div>
         </div>
       )}

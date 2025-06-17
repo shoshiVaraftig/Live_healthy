@@ -44,32 +44,33 @@ export const personalService = {
   },
 
   // שלח רק את מה שצריך - בלי username ו־hashedPassword
- updatePartialPersonalArea: async (userId: number, updatePayload: {
-  goalWeight?: number;
-  currentWeight?: number; // ← חדש
-  height?: number;
-  chatPersonality?: string;
-  dietaryPreferences?: {
-    foodName: string;
-    id: number;
-    userId: number;
-    like: string;
-  }[];
-}) => {
-  try {
-    const data = await authService.fetchWithAuth(`${API_BASE_URL}/api/User/${userId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatePayload),
-    });
-    return data;
-  } catch (error) {
-    console.error('PersonalService - Failed to PATCH personal area:', error);
-    throw error;
+  updatePartialPersonalArea: async (userId: number, updatePayload: {
+    goalWeight?: number;
+    currentWeight?: number; // ← חדש
+    height?: number;
+    chatPersonality?: string;
+    programLevel?: string;
+    dietaryPreferences?: {
+      userId: number,
+      foodName: string,
+      like: string,
+    }[],
+  }) => {
+    console.log("📤 Payload שנשלח לשרת:", JSON.stringify(updatePayload, null, 2));
+    try {
+      const data = await authService.fetchWithAuth(`${API_BASE_URL}/api/User/${userId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatePayload),
+      });
+      return data;
+    } catch (error) {
+      console.error('PersonalService - Failed to PATCH personal area:', error);
+      throw error;
+    }
   }
-}
 
 
 };

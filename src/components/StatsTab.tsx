@@ -70,7 +70,7 @@ const StatsTab: React.FC<Props> = ({
 
 
                     <div className="form-actions-group">
-                        <button type="submit" className="primary-button" disabled={savingChanges}>
+                        <button type="submit" className="edit-button-green" disabled={savingChanges}>
                             {savingChanges ? "שומר..." : "שמור"}
                         </button>
                         <button type="button" onClick={handleCancel} className="secondary-button">
@@ -81,6 +81,10 @@ const StatsTab: React.FC<Props> = ({
             ) : (
                 <>
                     <div className="stats-grid-container">
+                        <div className="stat-item-card">
+                            <div className="stat-number">{start ?? '-'}</div> {/* ✅ תוספת */}
+                            <div className="stat-label">משקל התחלה (ק"ג)</div> {/* ✅ תוספת */}
+                        </div>
                         <div className="stat-item-card">
                             <div className="stat-number">{current ?? '-'}</div>
                             <div className="stat-label">משקל נוכחי (ק"ג)</div>
@@ -96,6 +100,7 @@ const StatsTab: React.FC<Props> = ({
                             <div className="stat-label">נותרו (ק"ג)</div>
                         </div>
                     </div>
+
                     <div className="progress-card">
                         <h3 className="section-subtitle">התקדמות</h3>
 
@@ -120,7 +125,7 @@ const StatsTab: React.FC<Props> = ({
                     </div>
 
                     <div className="button-group">
-                        <button onClick={handleEdit} className="primary-button">ערוך</button>
+                        <button onClick={handleEdit} className="edit-button-green">ערוך</button>
                     </div>
                 </>
             )}
