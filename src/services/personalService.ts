@@ -1,5 +1,6 @@
 // src/services/personalService.ts
 import type { PersonalArea } from "../types/personal";
+import type { Recipe } from "../types/recipe";
 import { authService } from './authService';
 
 
@@ -42,7 +43,21 @@ export const personalService = {
       throw error;
     }
   },
-
+  addFavoriteRecipe: async (userId: number | undefined, recipe: Recipe): Promise<void> => {
+    try {
+      await authService.fetchWithAuth(`${API_BASE_URL}/api/User/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify( recipe ),
+      });
+    } catch (error) {
+      console.error('PersonalService - Failed to add favorite recipe:', error);
+      throw error;
+    }
+  },
+  
   // שלח רק את מה שצריך - בלי username ו־hashedPassword
   updatePartialPersonalArea: async (userId: number, updatePayload: {
     goalWeight?: number;

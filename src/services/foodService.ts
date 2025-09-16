@@ -18,6 +18,7 @@ const url = `${API_BASE_URL}/api/food/search?foodName=${encodeURIComponent(foodN
     }
 
     const data: Food = await response.json();
+    
     return data;
   },
 };

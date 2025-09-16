@@ -1,27 +1,27 @@
-// src/components/Home.tsx (שם מתאים יותר יהיה Navbar.tsx)
+// src/components/Home.tsx
 import { BiUser } from "react-icons/bi";
 import { BsFillCupHotFill, BsClipboardHeart, BsChatDots, BsInfoCircle } from "react-icons/bs";
 import { RiMenu3Line, RiCloseLine } from "react-icons/ri";
 import './home.css'; // ייבוא ה-CSS של ה-Navbar
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import ChatBot from "./ChatBot";
-// import Logo from './logo.tsx'; // אם ה-Logo שייך ל-Navbar, השאר אותו. אחרת, הסר.
+import { useAuthStore } from "../store/authStore";
+// import Logo from './logo.tsx';
 
-function Home() { // אם שינית את השם ל-Navbar, עדכן כאן גם
+function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [showChatBot, setShowChatBot] = useState(false);
-
-  // ה-useLocation וה-isHomePage כבר לא נחוצים כאן כי ה-Navbar גלובלי
-  // const location = useLocation();
-  // const isHomePage = location.pathname === "/" || location.pathname === "/home";
-
+  const { user } = useAuthStore(); // שימוש ב-hook לקבלת מידע על המשתמש המחובר
+useEffect(() => {
+    console.log("Current user state in Home component:", user);
+}, [user]);
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
       if (window.innerWidth >= 768) {
-        setIsMenuOpen(false); // סגור תפריט במעבר לדסקטופ
+        setIsMenuOpen(false);
       }
     };
 
@@ -34,37 +34,39 @@ function Home() { // אם שינית את השם ל-Navbar, עדכן כאן גם
   };
 
   return (
-    <> {/* Fragment עוטף את ה-Navbar וכפתור הצ'אט */}
-      {/* כפתור המבורגר למסכים קטנים */}
+    <>
       {isMobile && (
-        <button 
-          className="hamburger-button" 
+        <button
+          className="hamburger-button"
           onClick={toggleMenu}
           aria-label="תפריט"
         >
-          {isMenuOpen ? 
-            <RiCloseLine size={25} color="#15803d" /> : 
+          {isMenuOpen ?
+            <RiCloseLine size={25} color="#15803d" /> :
             <RiMenu3Line size={25} color="#15803d" />
           }
         </button>
       )}
 
-      {/* סרגל הניווט הראשי */}
       <nav className={`
-        navbar 
-        ${isMobile && isMenuOpen ? 'navbar-mobile-open' : ''} 
+        navbar
+        ${isMobile && isMenuOpen ? 'navbar-mobile-open' : ''}
       `}>
-        {/* תוכן ה-Navbar */}
-        {/* אם ה-Logo שייך ל-Navbar, שים אותו כאן */}
-        {/* <div className="navbar-logo"><Logo /></div> */}
 
+        {/* לוגיקה שמציגה 'Personal' או 'Login' בהתאם למצב ההתחברות */}
         <div className="flex flex-col items-center">
           <div className="mb-2">
             <BiUser size={25} color="#15803d" />
           </div>
-          <Link to="/personal-area" className="topics" onClick={() => isMobile && setIsMenuOpen(false)}>
-            Personal
-          </Link>
+          {user ? (
+            <Link to="/personal-area" className="topics" onClick={() => isMobile && setIsMenuOpen(false)}>
+              Personal
+            </Link>
+          ) : (
+            <Link to="/login" className="topics" onClick={() => isMobile && setIsMenuOpen(false)}>
+              Login
+            </Link>
+          )}
         </div>
 
         <div className="flex flex-col items-center">
@@ -95,22 +97,21 @@ function Home() { // אם שינית את השם ל-Navbar, עדכן כאן גם
         </div>
       </nav>
 
-      {/* כפתור הצ'אט-בוט - נשאר כאן אם הוא שייך ל-Navbar באופן קבוע */}
       <button
-  className="but"
-  aria-label="chat-bot"
-  onClick={() => setShowChatBot(prev => !prev)}
->
-  <BsChatDots size={40} color="#15803d" />
-</button>
-{showChatBot && (
-  <div className="chatbot-container">
-    <ChatBot />
-  </div>
-)}
+        className="but"
+        aria-label="chat-bot"
+        onClick={() => setShowChatBot(prev => !prev)}
+      >
+        <BsChatDots size={40} color="#15803d" />
+      </button>
+      {showChatBot && (
+        <div className="chatbot-container">
+          <ChatBot />
+        </div>
+      )}
 
     </>
   );
 };
 
-export default Home; // או Navbar אם שינית את השם
+export default Home;

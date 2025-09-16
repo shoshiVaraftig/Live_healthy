@@ -155,7 +155,63 @@ body {
     color: var(--primary-green);
     transform: none;
 }
+.recipe-card-container {
+    background-color: #f7fcf9; /* צבע רקע בהיר */
+    border: 1px solid #c9e4c9; /* מסגרת ירוקה עדינה */
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* צל עדין */
+    direction: rtl; /* יישור מימין לשמאל */
+    text-align: right;
+}
 
+.recipe-title {
+    font-size: 2rem;
+    color: #388e3c; /* צבע ירוק כהה לכותרת */
+    font-weight: bold;
+    border-bottom: 2px solid #a5d6a7; /* קו תחתון עדין */
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.recipe-section-title {
+    font-size: 1.5rem;
+    color: #4caf50; /* צבע ירוק בינוני לכותרות פנימיות */
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.recipe-list {
+    list-style-type: none; /* הסרת הנקודות של הרשימה */
+    padding-right: 0;
+    margin-top: 0;
+}
+
+.recipe-list li {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #444; /* צבע טקסט אפור כהה */
+    margin-bottom: 8px;
+}
+
+.recipe-button {
+    background-color: #d32f2f; /* צבע אדום לכפתור */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.recipe-button:hover {
+    background-color: #b71c1c; /* שינוי צבע בעת מעבר עכבר */
+}
 /* ------------------------------------- */
 /* תוכן הלשונית (כללי) */
 /* ------------------------------------- */
@@ -749,7 +805,25 @@ body {
   font-weight: bold;
   text-align: right;
 }
+/* ... (קוד CSS קיים) */
 
+/* הסרת ההגדרה של ::before עבור רשימות ספציפיות */
+.ingredients-list li::before,
+.instructions-list li::before {
+  content: ""; /* ביטול התוכן */
+  display: none; /* הסתרת האלמנט */
+}
+
+/* אם הבעיה עדיין קיימת, ייתכן שצריך לבטל את ה-::before באופן כללי יותר */
+/* נסה להוסיף את זה, ואם זה פותר את הבעיה - תוכל להסיר את השורות הספציפיות למעלה */
+/*
+.recipe-list li::before {
+  content: "";
+  display: none;
+}
+*/
+
+/* ... (קוד CSS המשך) */
 .form-group {
   margin-bottom: 1.5rem;
   display: flex;
@@ -918,4 +992,307 @@ body {
   margin-right: 0.5rem;
   cursor: pointer;
 }
+/* רקע דינמי עם דוגמת גלים */
+body, .personal-area-wrapper {
+    background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+    min-height: 100vh;
+}
 
+/* אפקט מעבר בין לשוניות */
+.tab-content-card {
+    animation: fadeInTab 0.5s cubic-bezier(.68,-0.55,.27,1.55);
+    transition: box-shadow 0.3s;
+    box-shadow: 0 8px 32px rgba(13,148,136,0.08), 0 1.5px 6px rgba(0,0,0,0.04);
+    border: 1px solid var(--primary-green);
+    background: rgba(255,255,255,0.98);
+}
+
+@keyframes fadeInTab {
+    0% { opacity: 0; transform: translateY(30px) scale(0.97);}
+    100% { opacity: 1; transform: translateY(0) scale(1);}
+}
+
+/* כרטיסים עם צל עמוק יותר */
+.profile-summary-card,
+.personal-info-card,
+.goals-card,
+.stat-item-card,
+.progress-card,
+.diet-plan-card,
+.daily-recommendations-card,
+.recommendation-item {
+    box-shadow: 0 4px 24px rgba(13,148,136,0.10), 0 1.5px 6px rgba(0,0,0,0.04);
+    border: 1px solid #e0f2f1;
+    background: #f8fafc;
+    transition: box-shadow 0.3s;
+}
+
+.profile-summary-card:hover,
+.personal-info-card:hover,
+.goals-card:hover,
+.stat-item-card:hover,
+.progress-card:hover,
+.diet-plan-card:hover,
+.daily-recommendations-card:hover,
+.recommendation-item:hover {
+    box-shadow: 0 8px 32px rgba(13,148,136,0.18), 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* כפתורים עגולים ומודרניים */
+.primary-button, .logout-button, .edit-button-green {
+    border-radius: 999px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    box-shadow: 0 2px 8px rgba(13,148,136,0.10);
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.primary-button {
+    background: linear-gradient(90deg, #0d9488 0%, #0f766e 100%);
+    color: #fff;
+}
+
+.primary-button:hover {
+    background: linear-gradient(90deg, #0f766e 0%, #0d9488 100%);
+    box-shadow: 0 4px 16px rgba(13,148,136,0.18);
+}
+
+.logout-button {
+    background: #dc2626;
+    color: #fff;
+}
+
+.logout-button:hover {
+    background: #b91c1c;
+}
+
+/* לשוניות עם אפקט מעבר צבע */
+.tab-button {
+    transition: background 0.2s, color 0.2s;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.tab-button.active {
+    background: linear-gradient(90deg, #0d9488 0%, #0f766e 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(13,148,136,0.10);
+}
+
+.tab-button:not(.active):hover {
+    background: #e0f2f1;
+    color: #0d9488;
+}
+
+/* אווטאר עגול עם צל */
+.profile-avatar {
+    border-radius: 50%;
+    box-shadow: 0 4px 16px rgba(13,148,136,0.10);
+    border: 2px solid #0d9488;
+    background: #fff;
+}
+
+/* כרטיסים גדולים במסכים רחבים */
+@media (min-width: 900px) {
+    .personal-area-container {
+        max-width: 700px;
+    }
+    .tab-content-card {
+        padding: 2.5rem 2rem;
+    }
+}
+
+/* אנימציה לכפתור שמירה מוצלחת */
+.primary-button:active {
+    animation: buttonPop 0.2s;
+}
+@keyframes buttonPop {
+    0% { transform: scale(1);}
+    50% { transform: scale(1.08);}
+    100% { transform: scale(1);}
+}
+/* עיצוב חדש לפרופיל אישי */
+.profile-tab-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2.5rem;
+}
+
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.profile-avatar {
+    width: 110px;
+    height: 110px;
+    font-size: 3rem;
+    border-radius: 50%;
+    border: 3px solid var(--primary-green);
+    background: #fff;
+    box-shadow: 0 4px 24px rgba(13,148,136,0.10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.profile-name {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary-green);
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.04em;
+    text-align: center;
+}
+
+.profile-email {
+    font-size: 1rem;
+    color: var(--text-medium);
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.profile-cards-row {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 700px) {
+    .profile-cards-row {
+        flex-direction: column;
+        gap: 1.2rem;
+        align-items: center;
+    }
+}
+
+.profile-summary-card,
+.goals-card {
+    flex: 1 1 0;
+    min-width: 220px;
+    max-width: 320px;
+    background: #f8fafc;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(13,148,136,0.10);
+    border: 1.5px solid #e0f2f1;
+    padding: 1.5rem 1.2rem;
+    transition: box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-summary-card:hover,
+.goals-card:hover {
+    box-shadow: 0 8px 32px rgba(13,148,136,0.18), 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.profile-summary-card .section-title,
+.goals-card .section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-green);
+    margin-bottom: 1rem;
+    text-align: center;
+    border-bottom: 2px solid #e0f2f1;
+    padding-bottom: 0.3rem;
+    width: 100%;
+}
+
+.profile-summary-card .info-value,
+.goals-card .goals-text {
+    font-size: 1.1rem;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.profile-summary-card .info-label {
+    font-size: 0.9rem;
+    color: var(--text-medium);
+    margin-bottom: 0.2rem;
+    text-align: center;
+}
+
+.bmi-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0d9488;
+    margin-top: 0.7rem;
+    margin-bottom: 0.2rem;
+    text-align: center;
+}
+.info-label.prominent-label {
+    display: block;
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.15rem;
+    letter-spacing: 0.02em;
+}
+
+.info-value.secondary-value,
+.bmi-value.secondary-value {
+    display: inline-block;
+    font-size: 1rem;
+    color: var(--text-medium);
+    font-weight: 500;
+    margin-right: 0.3rem;
+}
+
+.info-unit {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    margin-right: 0.1rem;
+}
+.favorite-recipes-card {
+  background: #f8fafc;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(13,148,136,0.10);
+  border: 1.5px solid #e0f2f1;
+  padding: 1.2rem;
+  margin-top: 1.2rem;
+}
+.favorite-recipes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.favorite-recipe-link {
+  background: none;
+  border: none;
+  color: var(--primary-green);
+  font-size: 1.08rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: right;
+  transition: color 0.2s;
+}
+.favorite-recipe-link:hover {
+  color: #0f766e;
+  text-decoration: underline;
+}
+.info-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #e0f2f1;
+  padding-bottom: 0.5rem;
+}
+.info-item-label-bold {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+.info-item-value-normal {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-medium);
+}

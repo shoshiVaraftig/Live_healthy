@@ -1,6 +1,6 @@
 import React from 'react';
 import type { PersonalArea as UserDataFromApi } from '../types/personal'
-
+import './ProfileTab.css';
 interface Props {
   personalData: UserDataFromApi;
   editFormData: any;
@@ -124,23 +124,36 @@ const ProfileTab: React.FC<Props> = ({
               </div>
             </div>
             <div className="profile-column-item">
+             
               <div className="personal-info-card">
-                <h3 className="section-subtitle">פרטים אישיים</h3>
+                <h3 className="section-subtitle">פרטים אישיים:</h3>
                 <div className="info-item">
-                  <span className="info-value">{personalData?.currentWeight || '-'} ק"ג</span>
-                  <span className="info-label">משקל</span>
+                  <span className="info-value">{personalData?.currentWeight || '-'} ק"ג  </span>
+                  <span className="info-label">משקל:  </span>
                 </div>
                 <div className="info-item">
                   <span className="info-value">{editFormData.height || '-'} ס"מ</span>
-                  <span className="info-label">גובה</span>
+                  <span className="info-label">גובה:  </span>
                 </div>
                 <div className="info-item no-border">
                   <span className="bmi-value">{calculateBMI()}</span>
-                  <span className="info-label">BMI</span>
+                  <span className="info-label">BMI:  </span>
                 </div>
               </div>
+              {/* <div className="info-item">
+  <span className="info-label info-label-bold">משקל:</span>
+  <span className="info-value">{personalData.currentWeight || '-'} ק"ג</span>
+</div>
+<div className="info-item">
+  <span className="info-label info-label-bold">גובה:</span>
+  <span className="info-value">{personalData.height || '-'} ס"מ</span>
+</div>
+<div className="info-item">
+  <span className="info-label info-label-bold">מדד BMI:</span>
+  <span className="info-value">{calculateBMI()}</span>
+</div> */}
               <div className="goals-card">
-                <h3 className="section-subtitle">המטרות שלי</h3>
+                <h3 className="section-subtitle">המאמן שלי</h3>
                 <p className="goals-text">
                   {personalityLabels[personalData?.chatPersonality ?? ''] || 'לא נבחר סגנון.'}
                 </p>

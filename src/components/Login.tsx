@@ -2,7 +2,8 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { authService } from "../services/authService"; // ייבוא שירות האימות שלנו
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // ייבוא קובץ ה-CSS החדש
 import './Login.css';
 
@@ -31,9 +32,9 @@ const Login: React.FC = () => {
             // ה-authService יטפל בקריאת ה-API ובעדכון ה-Zustand store (שמירת טוקן, פרטי משתמש וכו')
             await authService.login({ username, password });
             console.log(username);
-            alert('התחברות מוצלחת!');
+            toast.success('התחברות מוצלחת', { className: 'toast' });
             navigate("/personal-area"); // ניתוב לאזור האישי
-        } catch (err: any) { // שינוי ל-any כדי לטפל ב-Error אובייקטים
+        } catch (err) { // שינוי ל-any כדי לטפל ב-Error אובייקטים
             console.error("Login error:", err);
             setError("התחברות נכשלה. אנא בדוק את פרטי ההתחברות שלך.");
         } finally {
@@ -50,10 +51,10 @@ const Login: React.FC = () => {
             <div className="login-container">
                 <div className="login-header">
                     <h2 className="login-title">
-                        התחברות לProDiet
+                        התחברות
                     </h2>
                 </div>
-                
+
                 <form className="login-form" onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="username" className="form-label">
@@ -70,7 +71,7 @@ const Login: React.FC = () => {
                             placeholder="הכנס שם משתמש"
                         />
                     </div>
-                    
+
                     <div className="form-group">
                         <label htmlFor="password" className="form-label">
                             סיסמה
@@ -127,7 +128,7 @@ const Login: React.FC = () => {
                         </button>
                     </div>
                 </form>
-                
+
                 <div className="register-link-container">
                     <p className="register-link-text">
                         אין לך חשבון?{" "}

@@ -1,3 +1,5 @@
+// src/components/PersonalArea.tsx
+
 import React, { useState, useEffect } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { personalService } from '../services/personalService';
@@ -9,287 +11,260 @@ import { usePersonalStore } from '../store/personalStore';
 import ProfileTab from './ProfileTab';
 import StatsTab from './StatsTab';
 import PlanTab from './PlanTab';
-import Food from './Food';
 
 export interface UpdateUserData {
-  height?: number;
-  goalWeight?: number;
-  currentWeight?: number;
-  programLevel?: string;
-  chatPersonality?: string;
-  dietaryPreferenceFoodNames?: string[];
+    height?: number;
+    goalWeight?: number;
+    currentWeight?: number;
+    programLevel?: string;
+    chatPersonality?: string;
+    dietaryPreferenceFoodNames?: string[];
+    // ✅ הוספתי שדה זה כדי לסנכרן עם הקוד
+    favoriteRecipes?: { id: string; title: string }[];
 }
 
 type Food = {
-  id: number;
-  name: string;
-  calories: number;
-  servingSize: string;
+    id: number;
+    name: string;
+    calories: number;
+    servingSize: string;
 };
 
 function PersonalArea() {
-  const [personalData, setPersonalData] = useState<UserDataFromApi | null>(null);
-  const { setPersonalData: setPersonalDataToStore } = usePersonalStore();
-  const [loadingData, setLoadingData] = useState(true);
-  const [errorData, setErrorData] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState('profile');
-  const [editFormData, setEditFormData] = useState<UpdateUserData>({});
-  const [savingChanges, setSavingChanges] = useState(false);
-  const [saveError, setSaveError] = useState<string | null>(null);
-  const [saveSuccess, setSaveSuccess] = useState<boolean>(false);
-  const [editProfile, setEditProfile] = useState(false);
-  const [editStats, setEditStats] = useState(false);
-  const [editPlan, setEditPlan] = useState(false);
-  const [allFoods, setAllFoods] = useState<Food[]>([]);
+    const [personalData, setPersonalData] = useState<UserDataFromApi | null>(null);
+    const { setPersonalData: setPersonalDataToStore } = usePersonalStore();
+    const [loadingData, setLoadingData] = useState(true);
+    const [errorData, setErrorData] = useState<string | null>(null);
+    const [activeTab, setActiveTab] = useState('profile');
+    const [editingTab, setEditingTab] = useState<string | null>(null);
+    const [editFormData, setEditFormData] = useState<UpdateUserData>({});
+    const [savingChanges, setSavingChanges] = useState(false);
+    const [saveError, setSaveError] = useState<string | null>(null);
+    const [saveSuccess, setSaveSuccess] = useState<boolean>(false);
+    const [allFoods, setAllFoods] = useState<Food[]>([]);
 
+    const personalityOptions = [
+        { value: 'friendly', label: 'חברותי ותומך' },
+        { value: 'strict', label: 'קשוח וממוקד' },
+        { value: 'motivational', label: 'מדרבן ואנרגטי' },
+        { value: 'scientific', label: 'הסברי ומדויק' },
+    ];
 
-  const personalityOptions = [
-    { value: 'friendly', label: 'חברותי ותומך' },
-    { value: 'strict', label: 'קשוח וממוקד' },
-    { value: 'motivational', label: 'מדרבן ואנרגטי' },
-    { value: 'scientific', label: 'הסברי ומדויק' },
-  ];
+    const personalityLabels: Record<string, string> = {
+        friendly: 'חברותי ותומך',
+        strict: 'קשוח וממוקד',
+        motivational: 'מדרבן ואנרגטי',
+        scientific: 'הסברי ומדויק',
+    };
 
-  const personalityLabels: Record<string, string> = {
-    friendly: 'חברותי ותומך',
-    strict: 'קשוח וממוקד',
-    motivational: 'מדרבן ואנרגטי',
-    scientific: 'הסברי ומדויק',
-  };
+    const { user, isAuthenticated, isLoading: isLoadingAuth } = useAuthStore();
+    const navigate = useNavigate();
 
-  const { user, isAuthenticated, isLoading: isLoadingAuth } = useAuthStore();
-  const navigate = useNavigate();
+    const fetchPersonalData = async () => {
+        try {
+            setLoadingData(true);
+            if (!user?.id) throw new Error("User ID is missing");
 
-  const fetchPersonalData = async () => {
-    try {
-      setLoadingData(true);
-      if (!user?.id) throw new Error("User ID is missing");
+            const currentUser = await personalService.getPersonalArea(user.id);
+            setPersonalData(currentUser);
+            setPersonalDataToStore(currentUser);
 
-      const currentUser = await personalService.getPersonalArea(user.id);
-      setPersonalData(currentUser);
-      setPersonalDataToStore(currentUser);
-      setEditFormData({
-        goalWeight: currentUser.goalWeight || undefined,
-        currentWeight: currentUser.currentWeight || undefined,
-        height: currentUser.height || undefined,
-        chatPersonality: currentUser.chatPersonality || '',
-        programLevel: currentUser.programLevel || '',
-        dietaryPreferenceFoodNames: currentUser.dietaryPreferences?.map(p => p.foodName) || [],
-      });
+            // ✅ כאן השינוי החשוב! סנכרון הנתונים עם ה-editFormData
+            setEditFormData({
+                goalWeight: currentUser.goalWeight || undefined,
+                currentWeight: currentUser.currentWeight || undefined,
+                height: currentUser.height || undefined,
+                chatPersonality: currentUser.chatPersonality || '',
+                programLevel: currentUser.programLevel || '',
+                dietaryPreferenceFoodNames: currentUser.dietaryPreferences?.map(p => p.foodName) || [],
+                // ✅ עדכון favoriteRecipes מתוך הנתונים המלאים
+                favoriteRecipes: currentUser.favoriteRecipes?.map(fr => ({
+                    id: fr.recipeId.toString(),
+                    title: fr.recipe?.title || ''
+                })) || []
+            });
 
-      setErrorData(null);
-    } catch (err: any) {
-      setErrorData(err.message);
-      if (!isAuthenticated) navigate('/login');
-    } finally {
-      setLoadingData(false);
+            setErrorData(null);
+        } catch (err: any) {
+            setErrorData(err.message);
+            if (!isAuthenticated) navigate('/login');
+        } finally {
+            setLoadingData(false);
+        }
+    };
+
+    useEffect(() => {
+        if (isLoadingAuth) return;
+        if (isAuthenticated) fetchPersonalData();
+        else navigate('/login');
+    }, [isAuthenticated, navigate, isLoadingAuth]);
+
+    const handleLogout = () => {
+        authService.logout();
+        navigate('/login');
+    };
+
+    const handleFormChange = (e: React.ChangeEvent<any>) => {
+        const { name, value } = e.target;
+        const numericFields = ['startWeight', 'height', 'goalWeight', 'currentWeight'];
+
+        setEditFormData(prev => ({
+            ...prev,
+            [name]: numericFields.includes(name) ? Number(value) : value,
+        }));
+    };
+
+    function buildUpdatePayloadByTab(
+        tab: string,
+        editFormData: UpdateUserData,
+        userId: number,
+        allFoods: Food[]
+    ) {
+        const payload: any = {};
+
+        if (tab === 'profile') {
+            if (typeof editFormData.currentWeight === 'number')
+                payload.currentWeight = editFormData.currentWeight;
+            if (typeof editFormData.height === 'number')
+                payload.height = editFormData.height;
+            if (editFormData.chatPersonality)
+                payload.chatPersonality = editFormData.chatPersonality;
+        }
+
+        if (tab === 'stats') {
+            if (typeof editFormData.goalWeight === 'number')
+                payload.goalWeight = editFormData.goalWeight;
+            if (typeof editFormData.currentWeight === 'number')
+                payload.currentWeight = editFormData.currentWeight;
+        }
+
+        if (tab === 'plan') {
+            if (editFormData.programLevel?.trim())
+                payload.programLevel = editFormData.programLevel;
+            if (Array.isArray(editFormData.dietaryPreferenceFoodNames)) {
+                payload.dietaryPreferences = editFormData.dietaryPreferenceFoodNames
+                    .map((name: string) => {
+                        const food = allFoods.find(f => f.name === name);
+                        if (!food) return null;
+                        return {
+                            foodName: food.name,
+                            userId: Number(userId),
+                            like: 'like'
+                        };
+                    })
+                    .filter(Boolean);
+            }
+             // ✅ הוספה של favoriteRecipes לפיילוד
+            if (Array.isArray(editFormData.favoriteRecipes)) {
+                payload.favoriteRecipes = editFormData.favoriteRecipes.map(recipe => ({
+                    userId: userId,
+                    recipeId: Number(recipe.id),
+                }));
+            }
+        }
+
+        return payload;
     }
-  };
 
-  useEffect(() => {
-    if (isLoadingAuth) return;
-    if (isAuthenticated) fetchPersonalData();
-    else navigate('/login');
-  }, [isAuthenticated, navigate, isLoadingAuth]);
+    const handleEdit = (tabName: string) => {
+        setEditingTab(tabName);
+        setSaveSuccess(false);
+        setSaveError(null);
+    };
 
-  useEffect(() => {
-    fetch("http://localhost:5181/api/food")
-      .then(res => res.json())
-      .then(data => setAllFoods(data))
-      .catch(err => console.error("שגיאה בטעינת מאכלים:", err));
-  }, []);
+    const handleCancel = () => {
+        setEditingTab(null);
+        setSaveSuccess(false);
+        setSaveError(null);
+    };
 
-  const handleLogout = () => {
-    authService.logout();
-    navigate('/login');
-  };
+    const handleSave = async (tabName: string) => {
+        try {
+            if (!user?.id) throw new Error("User ID missing");
+            setSavingChanges(true);
 
-  const handleFormChange = (e: React.ChangeEvent<any>) => {
-    const { name, value } = e.target;
-    const numericFields = ['startWeight', 'height', 'goalWeight', 'currentWeight'];
+            const payload = buildUpdatePayloadByTab(tabName, editFormData, user.id, allFoods);
+            await personalService.updatePartialPersonalArea(user.id, payload);
 
-    setEditFormData(prev => ({
-      ...prev,
-      [name]: numericFields.includes(name) ? Number(value) : value,
-    }));
-  };
-
-  function buildUpdatePayloadByTab(
-    tab: string,
-    editFormData: UpdateUserData,
-    userId: number,
-    allFoods: Food[]
-  ) {
-    const payload: any = {};
-
-    if (tab === 'profile') {
-      if (typeof editFormData.currentWeight === 'number')
-        payload.currentWeight = editFormData.currentWeight;
-      if (typeof editFormData.height === 'number')
-        payload.height = editFormData.height;
-      if (editFormData.chatPersonality)
-        payload.chatPersonality = editFormData.chatPersonality;
-    }
-
-    if (tab === 'stats') {
-      if (typeof editFormData.goalWeight === 'number')
-        payload.goalWeight = editFormData.goalWeight;
-      if (typeof editFormData.currentWeight === 'number')
-        payload.currentWeight = editFormData.currentWeight;
-    }
-
-    if (tab === 'plan') {
-      if (editFormData.programLevel?.trim())
-        console.log("🟡 allFoods:", allFoods);
-      console.log("🟡 selected food names:", editFormData.dietaryPreferenceFoodNames);
-
-      if (Array.isArray(editFormData.dietaryPreferenceFoodNames)) {
-        console.log("שמות שנשלחים לשרת:", editFormData.dietaryPreferenceFoodNames);
-        payload.dietaryPreferences = editFormData.dietaryPreferenceFoodNames
-          .map((name: string) => {
-            const food = allFoods.find(f => f.name === name);
-            console.log("🔍 מחפש התאמה:", name, "→", food);
-            if (!food) return null;
-            return {
-              foodName: food.name,
-              userId: Number(userId),
-              like: 'like' // אם בעתיד יהיה "dislike" תוכל להרחיב
-            };
-          })
-          .filter(Boolean); // הסרת null
-        console.log("2שמות שנשלחים לשרת:", payload.dietaryPreferences);
-
-      }
-    }
-
-    return payload;
-  }
+            await fetchPersonalData(); // מקבל את הנתונים המעודכנים
+            setSaveSuccess(true);
+            setEditingTab(null);
+        } catch (err: any) {
+            setSaveError(err.message || 'שגיאה בשמירה');
+        } finally {
+            setSavingChanges(false);
+        }
+    };
 
 
-  const handleSaveByTab = async (tab: string, closeEdit: () => void) => {
-    try {
-      if (!user?.id) throw new Error("User ID missing");
-      setSavingChanges(true);
+    return (
+        <div className="personal-area-wrapper">
+            <div className="personal-area-container">
+                <div className="main-header-card">
+                    <h1 className="main-title">אזור אישי</h1>
+                    <p className="welcome-message">ברוך הבא, {personalData?.username || 'משתמש'}</p>
+                </div>
 
-      const payload = buildUpdatePayloadByTab(tab, editFormData, user.id, allFoods);
-      console.log("📦 מה באמת נשלח:", JSON.stringify(payload, null, 2));
-      await personalService.updatePartialPersonalArea(user.id, payload);
+                <div className="tabs-navigation">
+                    <button onClick={() => setActiveTab('profile')} className={`tab-button ${activeTab === 'profile' ? 'active' : ''}`}>פרופיל</button>
+                    <button onClick={() => setActiveTab('stats')} className={`tab-button ${activeTab === 'stats' ? 'active' : ''}`}>נתונים</button>
+                    <button onClick={() => setActiveTab('plan')} className={`tab-button ${activeTab === 'plan' ? 'active' : ''}`}>תוכנית תזונה</button>
+                </div>
 
-      await fetchPersonalData();
-      setSaveSuccess(true);
-      closeEdit();
-    } catch (err: any) {
-      setSaveError(err.message || 'שגיאה בשמירה');
-    } finally {
-      setSavingChanges(false);
-    }
-  };
+                <div className="tab-content-card">
+                    {activeTab === 'profile' && (
+                        <ProfileTab
+                            personalData={personalData!}
+                            editFormData={editFormData}
+                            saveError={saveError}
+                            saveSuccess={saveSuccess}
+                            savingChanges={savingChanges}
+                            handleFormChange={handleFormChange}
+                            handleSaveClick={() => handleSave('profile')}
+                            personalityOptions={personalityOptions}
+                            personalityLabels={personalityLabels}
+                            isEditing={editingTab === 'profile'}
+                            handleEditClick={() => handleEdit('profile')}
+                            handleCancelEdit={handleCancel}
+                        />
+                    )}
 
-  const handleSaveProfile = (e: React.FormEvent) => {
-    e.preventDefault();
-    handleSaveByTab('profile', () => setEditProfile(false));
-  };
+                    {activeTab === 'stats' && (
+                        <StatsTab
+                            personalData={personalData!}
+                            isEditing={editingTab === 'stats'}
+                            editFormData={editFormData}
+                            handleFormChange={handleFormChange}
+                            handleSave={() => handleSave('stats')}
+                            handleEdit={() => handleEdit('stats')}
+                            handleCancel={handleCancel}
+                            savingChanges={savingChanges}
+                        />
+                    )}
 
-  const handleSaveStats = (e: React.FormEvent) => {
-    e.preventDefault();
-    handleSaveByTab('stats', () => setEditStats(false));
-  };
+                    {activeTab === 'plan' && (
+                        <PlanTab
+                            allFoods={allFoods}
+                            personalData={personalData!}
+                            isEditing={editingTab === 'plan'}
+                            editFormData={editFormData}
+                            handleFormChange={handleFormChange}
+                            setEditFormData={setEditFormData}
+                            handleSave={() => handleSave('plan')}
+                            handleEdit={() => handleEdit('plan')}
+                            handleCancel={handleCancel}
+                            savingChanges={savingChanges}
+                        />
+                    )}
 
-  const handleSavePlan = (e: React.FormEvent) => {
-    e.preventDefault();
-    handleSaveByTab('plan', () => setEditPlan(false));
-  };
 
-  return (
-    <div className="personal-area-wrapper">
-      <div className="personal-area-container">
-        <div className="main-header-card">
-          <h1 className="main-title">אזור אישי</h1>
-          <p className="welcome-message">ברוך הבא, {personalData?.username || 'משתמש'}</p>
+                    <div className="logout-button-container">
+                        <button onClick={handleLogout} className="logout-button">התנתק</button>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div className="tabs-navigation">
-          <button onClick={() => setActiveTab('profile')} className={`tab-button ${activeTab === 'profile' ? 'active' : ''}`}>פרופיל</button>
-          <button onClick={() => setActiveTab('stats')} className={`tab-button ${activeTab === 'stats' ? 'active' : ''}`}>נתונים</button>
-          <button onClick={() => setActiveTab('plan')} className={`tab-button ${activeTab === 'plan' ? 'active' : ''}`}>תוכנית תזונה</button>
-        </div>
-
-        <div className="tab-content-card">
-          {activeTab === 'profile' && (
-            <ProfileTab
-              personalData={personalData!}
-              editFormData={editFormData}
-              saveError={saveError}
-              saveSuccess={saveSuccess}
-              savingChanges={savingChanges}
-              handleFormChange={handleFormChange}
-              handleSaveClick={handleSaveProfile}
-              personalityOptions={personalityOptions}
-              personalityLabels={personalityLabels}
-              isEditing={editProfile}
-              handleEditClick={() => {
-                setEditProfile(true);
-                setSaveError(null);
-                setSaveSuccess(false);
-              }}
-              handleCancelEdit={() => {
-                setEditProfile(false);
-                setSaveError(null);
-                setSaveSuccess(false);
-              }}
-            />
-          )}
-
-          {activeTab === 'stats' && (
-            <StatsTab
-              personalData={personalData!}
-              isEditing={editStats}
-              editFormData={editFormData}
-              handleFormChange={handleFormChange}
-              handleSave={handleSaveStats}
-              handleEdit={() => {
-                setEditStats(true);
-                setSaveSuccess(false);
-              }}
-              handleCancel={() => {
-                setEditStats(false);
-                setSaveError(null);
-                setSaveSuccess(false);
-              }}
-              savingChanges={savingChanges}
-            />
-          )}
-
-          {activeTab === 'plan' && (
-            <PlanTab
-              allFoods={allFoods}
-              personalData={personalData!}
-              isEditing={editPlan}
-              editFormData={editFormData}
-              handleFormChange={handleFormChange}
-              setEditFormData={setEditFormData}
-              handleSave={handleSavePlan}
-              handleEdit={() => {
-                setEditPlan(true);
-                setSaveSuccess(false);
-              }}
-              handleCancel={() => {
-                setEditPlan(false);
-                setSaveError(null);
-                setSaveSuccess(false);
-              }}
-              savingChanges={savingChanges}
-            />
-          )}
-
-
-          <div className="logout-button-container">
-            <button onClick={handleLogout} className="logout-button">התנתק</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+    );
 }
 
 export default PersonalArea;

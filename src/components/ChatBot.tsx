@@ -197,9 +197,11 @@ const ChatBot: React.FC = () => {
     );
   }
 
-  function handleKeyDown(event: KeyboardEvent<HTMLInputElement>): void {
-    throw new Error('Function not implemented.');
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
+  if (event.key === 'Enter') {
+    handleSend();
   }
+};
 
   return (
     <div className="chat-container">

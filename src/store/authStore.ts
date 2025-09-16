@@ -1,13 +1,11 @@
-// src/store/authStore.ts
 import { create } from 'zustand';
 import { jwtDecode } from 'jwt-decode'; // npm install jwt-decode
 
 // הגדרת ממשק (interface) למשתמש
-interface User {
+export interface User {
   id: number;
   username: string;
   email: string;
-  // כאן אפשר להוסיף שדות נוספים שתשלפי מה-JWT או ממידע משתמש מהשרת
 }
 
 // הגדרת ממשק למצב האימות (ה-Store עצמו)

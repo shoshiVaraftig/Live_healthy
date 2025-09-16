@@ -177,6 +177,7 @@
     .food-search-container {
         padding: 1.5rem;
         margin: 2rem auto;
+        max-width: 70%; /* תופס יותר מקום במסכים קטנים */
     }
 
     .food-search-container h1 {
@@ -189,7 +190,7 @@
     }
 
     .food-search-input {
-        max-width: 100%; /* תופס את כל הרוחב */
+        max-width: 100%; 
     }
 
     .food-search-form button,
@@ -203,4 +204,219 @@
     .food-search-container h1 {
         font-size: 1.5rem;
     }
+}
+/* גל צבעים לכותרת */
+.food-title {
+  font-size: 2.2rem;
+  color: #15803d;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 2rem;
+  letter-spacing: -1px;
+  background: linear-gradient(90deg, #22c55e, #bbf7d0, #22c55e);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: wave-gradient 3s linear infinite;
+}
+
+@keyframes wave-gradient {
+  0% { background-position: 0% 50%;}
+  100% { background-position: 100% 50%;}
+}
+
+.food-result-card {
+  background: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 24px rgba(34,139,34,0.08);
+  padding: 1.2rem 1rem;
+  max-width: 400px;
+  margin: 2rem auto 0 auto;
+  min-height: unset;      /* ביטול גובה מינימלי */
+  height: auto;           /* גובה אוטומטי */
+  width: 100%;            /* תופס את רוחב הקונטיינר */
+  box-sizing: border-box;
+  overflow: visible;
+}
+@media (max-width: 600px) {
+  .food-result-card {
+    padding: 1rem 0.5rem;
+    font-size: 1rem;
+    max-width: 98vw;      /* לא תופס את כל המסך */
+    width: 100%;
+    min-height: unset;
+    height: auto;
+  }
+}
+
+
+.food-result-card:hover {
+  transform: scale(1.03) rotate(-2deg);
+  box-shadow: 0 8px 32px rgba(34,139,34,0.14);
+}
+
+/* אנימציית הופעה */
+@keyframes fade-in-move {
+  from { opacity: 0; transform: translateY(40px) scale(0.97) rotate(2deg);}
+  to { opacity: 1; transform: translateY(0) scale(1) rotate(0);}
+}
+
+/* מעבר צבעים לכפתורים */
+.food-btn, .refetch-button {
+  padding: 0.8rem 1.8rem;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #22c55e 0%, #bbf7d0 100%);
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(34,139,34,0.08);
+  transition: background 0.3s, transform 0.2s;
+}
+
+.food-btn:hover, .refetch-button:hover {
+  background: linear-gradient(90deg, #bbf7d0 0%, #22c55e 100%);
+  transform: scale(1.07) translateY(-2px);
+}
+
+.food-btn.secondary {
+  background: linear-gradient(90deg, #bbf7d0 0%, #22c55e 100%);
+  color: #15803d;
+}
+
+.food-btn.secondary:hover {
+  background: linear-gradient(90deg, #22c55e 0%, #bbf7d0 100%);
+  color: #fff;
+}
+
+/* אפקט פוקוס לאינפוט */
+.food-search-input {
+  padding: 0.8rem 1.2rem;
+  border-radius: 9999px;
+  border: 1px solid #bbf7d0;
+  font-size: 1.1rem;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(34,139,34,0.04);
+  transition: border 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.food-search-input:focus {
+  border-color: #22c55e;
+  box-shadow: 0 4px 16px rgba(34,139,34,0.12);
+  transform: scale(1.03);
+}
+
+/* הודעות טעינה/שגיאה */
+.loading-message, .error-message, .no-results-message {
+  text-align: center;
+  font-size: 1.1rem;
+  margin: 1.5rem 0;
+  animation: fade-in-move 0.7s;
+}
+
+/* מעבר צבעים לרקע העמוד */
+.food-search-container {
+  min-height: 100vh;
+  background: linear-gradient(120deg, #f6fdf7 60%, #bbf7d0 100%);
+  padding-bottom: 2rem;
+  transition: background 1s;
+}
+.food-result-card {
+  background: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 24px rgba(34,139,34,0.08);
+  padding: 1.5rem 1rem;
+  max-width: 400px;
+  margin: 2rem auto 0 auto;
+  min-height: 120px;
+  animation: fade-in-move 0.8s cubic-bezier(.68,-0.55,.27,1.55);
+  transition: transform 0.3s, box-shadow 0.3s;
+  /* תיקון רספונסיביות */
+  width: 95vw;
+  max-width: 400px;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+@media (max-width: 600px) {
+  .food-result-card {
+    padding: 1rem 0.5rem;
+    min-height: 80px;
+    font-size: 1rem;
+  }
+}
+
+/* כותרת ברורה */
+.food-title {
+  font-size: 2rem;
+  color: #15803d;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 2rem;
+  letter-spacing: -1px;
+  /* gradient עדין או צבע אחיד */
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: unset;
+  animation: none;
+}
+/* אפקט הכהיית רקע סביב הכרטיס בריחוף */
+.food-result-card-wrapper {
+  position: relative;
+  transition: background 0.3s;
+}
+
+.food-result-card-wrapper:hover::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(34,139,34,0.07); /* ירוק כהה שקוף */
+  z-index: 1;
+  pointer-events: none;
+  transition: background 0.3s;
+}
+
+/* הכרטיס עצמו תמיד מעל */
+.food-result-card {
+  position: relative;
+  z-index: 2;
+}
+.food-result-card-wrapper {
+  position: relative;
+}
+
+.food-result-card-wrapper:hover::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(34,139,34,0.07);
+  z-index: 1;
+  pointer-events: none;
+  transition: background 0.3s;
+}
+
+.food-result-card {
+  position: relative;
+  z-index: 2;
+  background: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 24px rgba(34,139,34,0.08);
+  padding: 1.2rem 1rem;
+  max-width: 400px;
+  margin: 2rem auto 0 auto;
+  height: auto;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+@media (max-width: 600px) {
+  .food-result-card {
+    padding: 1rem 0.5rem;
+    font-size: 1rem;
+    max-width: 98vw;
+    width: 100%;
+    height: auto;
+  }
 }

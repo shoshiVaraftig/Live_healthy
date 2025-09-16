@@ -1,4 +1,3 @@
-// src/components/Register.tsx
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { authService } from "../services/authService"; // ייבוא שירות האימות שלנו
@@ -11,7 +10,7 @@ const Register: React.FC = () => {
     const navigate = useNavigate();
     
     const [formData, setFormData] = useState<PersonalArea & { confirmPassword?: string }>({
-        id: 0, // בדרך כלל ה-ID נוצר בשרת, שלח 0 כברירת מחדל
+        id: 0, 
         username: "",
         password: "",
         email: "",
@@ -36,7 +35,7 @@ const Register: React.FC = () => {
             like: 0
         },
         chatPersonality: "",
-        confirmPassword: "", // שדה עזר לוולידציה בצד הלקוח בלבד
+        confirmPassword: "", 
     });
 
     const [error, setError] = useState<string | null>(null);
@@ -47,13 +46,10 @@ const Register: React.FC = () => {
         const { name, value, type } = e.target;
         setFormData((prev) => ({
             ...prev,
-            // המרה ל-number עבור שדות מספריים, אם יש לך כאלה בטופס
             [name]: type === 'number' ? Number(value) : value,
         }));
     };
 
-    // פונקציית handleChange נוספת לשדות תאריך אם תרצה להוסיף אותם לטופס
-    // הערה: יש לוודא שה-type UserRegistrationData נגיש או לשנות ל-PersonalArea
     const handleDateChange = (name: keyof PersonalArea, date: string) => {
         setFormData((prev) => ({
             ...prev,
@@ -61,7 +57,6 @@ const Register: React.FC = () => {
         }));
     };
 
-    // פונקציית handleChange עבור אובייקטים מקוננים (כמו weightTracing, dietaryPreference)
     const handleNestedChange = (
         parentName: keyof PersonalArea,
         childName: string,
@@ -70,7 +65,7 @@ const Register: React.FC = () => {
         setFormData((prev) => ({
             ...prev,
             [parentName]: {
-                ...(prev[parentName] as object), // העתק את האובייקט הקיים
+                ...(prev[parentName] as object), 
                 [childName]: value,
             },
         }));
@@ -82,7 +77,6 @@ const Register: React.FC = () => {
         setLoading(true);
 
         try {
-            // Validation
             if (!formData.username || !formData.email || !formData.password || !formData.confirmPassword) {
                 throw new Error("יש למלא את כל השדות הבסיסיים.");
             }
@@ -91,7 +85,6 @@ const Register: React.FC = () => {
                 throw new Error("הסיסמאות אינן תואמות.");
             }
 
-            // יצירת אובייקט הנתונים המלא לשליחה ל-API
             const dataToSend: PersonalArea = {
                 id: formData.id,
                 username: formData.username,
@@ -113,10 +106,8 @@ const Register: React.FC = () => {
             console.log("dataToSend object:", dataToSend);
             console.log("Email value in dataToSend:", dataToSend.email);
             
-            // קריאה לפונקציית הרישום בשירות האימות
             await authService.register(dataToSend);
 
-            // הרשמה והתחברות מוצלחות - נווט לאזור האישי
             alert('הרשמה והתחברות מוצלחות!');
             navigate("/personal-area");
 
@@ -147,7 +138,6 @@ const Register: React.FC = () => {
                 </div>
 
                 <form className="register-form" onSubmit={handleSubmit}>
-                    {/* שדות קיימים */}
                     <div className="form-group">
                         <label htmlFor="username" className="form-label">
                             שם משתמש
@@ -161,6 +151,7 @@ const Register: React.FC = () => {
                             onChange={handleChange}
                             className="form-input"
                             placeholder="הכנס שם משתמש"
+                            autoComplete="new-password"
                         />
                     </div>
 
@@ -177,6 +168,7 @@ const Register: React.FC = () => {
                             onChange={handleChange}
                             className="form-input"
                             placeholder="your@email.com"
+                            autoComplete="off"
                         />
                     </div>
 
@@ -194,6 +186,7 @@ const Register: React.FC = () => {
                                 onChange={handleChange}
                                 className="form-input"
                                 placeholder="הכנס סיסמה"
+                                autoComplete="new-password"
                             />
                             <button
                                 type="button"
@@ -228,29 +221,9 @@ const Register: React.FC = () => {
                             onChange={handleChange}
                             className="form-input"
                             placeholder="הכנס סיסמה שוב"
+                            autoComplete="new-password"
                         />
                     </div>
-                    {/* --- סוף שדות קיימים --- */}
-
-                    {/* --- שדות חדשים שנוספו מה-interface: כרגע מוגדרים עם ערכי ברירת מחדל ב-useState ולא מופיעים בטופס ה-HTML --- */}
-                    {/* אם תרצה לאפשר למשתמש להזין את השדות הללו, תוכל להוסיף אותם כאן בדומה לשדות הקיימים. לדוגמה: */}
-                    {/*
-                    <div className="form-group">
-                        <label htmlFor="phone" className="form-label">
-                            טלפון
-                        </label>
-                        <input
-                            id="phone"
-                            name="phone"
-                            type="text"
-                            value={formData.phone}
-                            onChange={handleChange}
-                            className="form-input"
-                            placeholder="הכנס מספר טלפון"
-                        />
-                    </div>
-                    */}
-                    {/* וכן הלאה עבור gender, birthDate, programLevel, startWeight, goalWeight, goalDate, startDate, chatPersonality */}
 
                     {error && (
                         <div className="error-message" role="alert">
